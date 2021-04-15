@@ -8,6 +8,14 @@
 #include "TreeNode.h"
 #include "TreeNodeType.h"
 #include "PatrolAction.h"
+#include "AttackAction.h"
+#include "MoveToLOSAction.h"
+#include "RangeAttackAction.h"
+#include "MoveToPlayerAction.h"
+#include "FleeAction.h"
+#include "MoveBehindCoverAction.h"
+#include "WaitBehindCoverAction.h"
+#include "MoveToRangeAction.h"
 
 class DecisionTree
 {

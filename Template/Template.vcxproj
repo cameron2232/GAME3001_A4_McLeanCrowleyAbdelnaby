@@ -169,16 +169,20 @@
     <ClCompile Include="..\src\CollisionManager.cpp" />
     <ClCompile Include="..\src\DecisionTree.cpp" />
     <ClCompile Include="..\src\Enemy.cpp" />
+    <ClCompile Include="..\src\FleeAction.cpp" />
     <ClCompile Include="..\src\Health.cpp" />
     <ClCompile Include="..\src\LOSCondition.cpp" />
     <ClCompile Include="..\src\MapNode.cpp" />
     <ClCompile Include="..\src\MeleeAttack.cpp" />
+    <ClCompile Include="..\src\MoveBehindCoverAction.cpp" />
     <ClCompile Include="..\src\MovetoLOSAction.cpp" />
     <ClCompile Include="..\src\MoveToPlayerAction.cpp" />
+    <ClCompile Include="..\src\MoveToRangeAction.cpp" />
     <ClCompile Include="..\src\NavigationObject.cpp" />
     <ClCompile Include="..\src\Obstacle.cpp" />
     <ClCompile Include="..\src\PatrolAction.cpp" />
     <ClCompile Include="..\src\RadiusCondition.cpp" />
+    <ClCompile Include="..\src\RangeAttackAction.cpp" />
     <ClCompile Include="..\src\SpaceShip.cpp" />
     <ClCompile Include="..\src\Sprite.cpp" />
     <ClCompile Include="..\src\Tile.cpp" />
@@ -204,6 +208,7 @@
     <ClCompile Include="..\src\Target.cpp" />
     <ClCompile Include="..\src\TextureManager.cpp" />
     <ClCompile Include="..\src\Util.cpp" />
+    <ClCompile Include="..\src\WaitBehindCoverAction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\IMGUI\imconfig.h" />
@@ -226,18 +231,22 @@
     <ClInclude Include="..\src\Config.h" />
     <ClInclude Include="..\src\DecisionTree.h" />
     <ClInclude Include="..\src\Enemy.h" />
+    <ClInclude Include="..\src\FleeAction.h" />
     <ClInclude Include="..\src\Health.h" />
     <ClInclude Include="..\src\Heuristic.h" />
     <ClInclude Include="..\src\LOSCondition.h" />
     <ClInclude Include="..\src\MapNode.h" />
     <ClInclude Include="..\src\MeleeAttack.h" />
+    <ClInclude Include="..\src\MoveBehindCoverAction.h" />
     <ClInclude Include="..\src\MoveToLOSAction.h" />
     <ClInclude Include="..\src\MoveToPlayerAction.h" />
+    <ClInclude Include="..\src\MoveToRangeAction.h" />
     <ClInclude Include="..\src\NavigationObject.h" />
     <ClInclude Include="..\src\NeighbourTile.h" />
     <ClInclude Include="..\src\Obstacle.h" />
     <ClInclude Include="..\src\PatrolAction.h" />
     <ClInclude Include="..\src\RadiusCondition.h" />
+    <ClInclude Include="..\src\RangeAttackAction.h" />
     <ClInclude Include="..\src\SoundType.h" />
     <ClInclude Include="..\src\SpaceShip.h" />
     <ClInclude Include="..\src\Sprite.h" />
@@ -275,6 +284,7 @@
     <ClInclude Include="..\src\TextureManager.h" />
     <ClInclude Include="..\src\Transform.h" />
     <ClInclude Include="..\src\Util.h" />
+    <ClInclude Include="..\src\WaitBehindCoverAction.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
