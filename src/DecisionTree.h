@@ -5,17 +5,22 @@
 #include "CloseCombatCondition.h"
 #include "LOSCondition.h"
 #include "RadiusCondition.h"
+#include "HealthCondition.h"
+#include "BehindCoverCondition.h"
+#include "AttackRangeCondition.h"
+#include "RangeDistanceCondition.h"
 #include "TreeNode.h"
 #include "TreeNodeType.h"
 #include "PatrolAction.h"
-#include "AttackAction.h"
-#include "MoveToLOSAction.h"
 #include "RangeAttackAction.h"
+#include "MoveToLOSAction.h"
 #include "MoveToPlayerAction.h"
 #include "FleeAction.h"
 #include "MoveBehindCoverAction.h"
 #include "WaitBehindCoverAction.h"
 #include "MoveToRangeAction.h"
+#include "CloseCombatAction.h"
+#include "RecentlyHitCondition.h"
 
 class DecisionTree
 {
@@ -41,6 +46,11 @@ private:
 	LOSCondition* m_LOSNode;
 	RadiusCondition* m_RadiusNode;
 	CloseCombatCondition* m_CloseCombatNode;
+	HealthCondition* m_HealthNode;
+	AttackRangeCondition* m_AttackRangeNode;
+	RangeDistanceCondition* m_RangeDistanceNode;
+	BehindCoverCondition* m_BehindCoverNode;
+	RecentlyHitCondition* m_RecentlyHitNode;
 
 	ActionNode* m_CurrentAction;
 

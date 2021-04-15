@@ -21,6 +21,16 @@ bool Agent::getYMoving() const
 	return m_isYMoving;
 }
 
+AgentType Agent::getAgentType() const
+{
+	return m_Type;
+}
+
+void Agent::setAgentType(AgentType type)
+{
+	m_Type = type;
+}
+
 void Agent::setXMoving(bool state)
 {
 	m_isXMoving = state;

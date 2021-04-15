@@ -168,9 +168,6 @@
     <ClCompile Include="..\src\CloseCombatCondition.cpp">
       <Filter>Decision\Conditions</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\AttackAction.cpp">
-      <Filter>Decision\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\MovetoLOSAction.cpp">
       <Filter>Decision\Actions</Filter>
     </ClCompile>
@@ -195,9 +192,6 @@
     <ClCompile Include="..\src\Bullet.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\RangeAttackAction.cpp">
-      <Filter>Decision\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\FleeAction.cpp">
       <Filter>Decision\Actions</Filter>
     </ClCompile>
@@ -209,6 +203,27 @@
     </ClCompile>
     <ClCompile Include="..\src\WaitBehindCoverAction.cpp">
       <Filter>Decision\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RangeAttackAction.cpp">
+      <Filter>Decision\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CloseCombatAction.cpp">
+      <Filter>Decision\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HealthCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BehindCoverCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AttackRangeCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RangeDistanceCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RecentlyHitCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,9 +407,6 @@
     <ClInclude Include="..\src\TreeNodeType.h">
       <Filter>Enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\AttackAction.h">
-      <Filter>Decision\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\MoveToLOSAction.h">
       <Filter>Decision\Actions</Filter>
     </ClInclude>
@@ -422,9 +434,6 @@
     <ClInclude Include="..\src\FleeAction.h">
       <Filter>Decision\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\RangeAttackAction.h">
-      <Filter>Decision\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\MoveToRangeAction.h">
       <Filter>Decision\Actions</Filter>
     </ClInclude>
@@ -433,6 +442,30 @@
     </ClInclude>
     <ClInclude Include="..\src\WaitBehindCoverAction.h">
       <Filter>Decision\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AgentType.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RangeAttackAction.h">
+      <Filter>Decision\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CloseCombatAction.h">
+      <Filter>Decision\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\HealthCondition.h">
+      <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BehindCoverCondition.h">
+      <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AttackRangeCondition.h">
+      <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RangeDistanceCondition.h">
+      <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RecentlyHitCondition.h">
+      <Filter>Decision\Conditions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
