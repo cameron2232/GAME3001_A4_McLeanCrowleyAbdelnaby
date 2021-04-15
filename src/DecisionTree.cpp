@@ -88,26 +88,33 @@ std::string DecisionTree::MakeDecision()
 
 void DecisionTree::m_buildTree()
 {
+	//Does Agent Have LOS?
 	m_LOSNode = new LOSCondition();
 	m_treeNodeList.push_back(m_LOSNode); // Node 0
 
+	//No LOS, is target in Radius Detection?
 	m_RadiusNode = new RadiusCondition();
 	AddNode(m_LOSNode, m_RadiusNode, LEFT_TREE_NODE);
 	m_treeNodeList.push_back(m_RadiusNode); // Node 1
 
+	//Yes LOS, is target in range?
 	m_CloseCombatNode = new CloseCombatCondition();
 	AddNode(m_LOSNode, m_CloseCombatNode, RIGHT_TREE_NODE);
 	m_treeNodeList.push_back(m_CloseCombatNode); // Node 2
 
+	//No Radius Detection, Patrol.
 	TreeNode* patrolNode = AddNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE);
 	m_treeNodeList.push_back(patrolNode); // Node 3
 
+	//Yes Radius Detection, Move to LOS.
 	TreeNode* moveToLOSNode = AddNode(m_RadiusNode, new MoveToLOSAction(), RIGHT_TREE_NODE);
 	m_treeNodeList.push_back(moveToLOSNode); // Node 4
 
+	//No Range, Move To Player.
 	TreeNode* moveToPlayerNode = AddNode(m_CloseCombatNode, new MoveToPlayerAction(), LEFT_TREE_NODE);
 	m_treeNodeList.push_back(moveToPlayerNode); // Node 5
 
+	//Yes Range, Attack.
 	TreeNode* attackNode = AddNode(m_CloseCombatNode, new AttackAction(), RIGHT_TREE_NODE);
 	m_treeNodeList.push_back(attackNode); // Node 6
 }
