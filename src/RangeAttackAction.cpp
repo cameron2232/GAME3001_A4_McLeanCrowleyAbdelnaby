@@ -6,9 +6,11 @@ RangeAttackAction::RangeAttackAction()
 	name = "Attack Action";
 }
 
-RangeAttackAction::~RangeAttackAction() = default;
+RangedAttackAction::~RangedAttackAction()
+= default;
 
-void RangeAttackAction::Action(Agent* m_agent)
+
+void RangedAttackAction::Action(Agent * m_agent)
 {
 	std::cout << "Performing Attack Action" << std::endl;
 }

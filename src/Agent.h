@@ -58,6 +58,13 @@ public:
 	void drawHeath();
 	void setAgentType(AgentType type);
 
+
+	void setFireDistance(int distance);
+	int getFireDistance();
+	void setFireDetectionColour(glm::vec4 colour);
+	void setIsInFireDetection(bool state);
+	bool getisInFireDistance();
+	glm::vec4 getFireDetectionColour();
 private:
 	void m_changeDirection();
 	float m_currentHeading;
@@ -74,6 +81,10 @@ private:
 	float m_DetectionDistance;
 	bool m_hasDetection;
 	glm::vec4 m_DetectionColour;
+
+	int m_fireDistance;
+	bool m_isInFireDistance;
+	glm::vec4 m_FireDistanceColour;
 
 	//Debug
 	bool m_DebugEnabled;

@@ -32,6 +32,7 @@ public:
 	
 
 private:
+	void m_DecisionMaking(Enemy* m_agent);
 	// IMGUI Function
 	void GUI_Function();
 	std::string m_guiTitle;
@@ -52,12 +53,14 @@ private:
 	bool m_getDebugMode() const;
 	void m_setPatrolMode(bool state);
 	bool m_getPatrolMode() const;
+	void m_CheckEnemyFireDetection(Enemy* enemy);
 	int cooldown = 20;
 	DecisionTree* decisionTree;
 	const float m_playerSpeed = 5.0f;
 	MeleeAttack* m_meleeActtack;
 	int meleeCoolDown = 30;
 	std::vector<Bullet*> m_pPlayerBullets;
+	std::vector<Bullet*> m_pEnemyBullets;
 	int currentMapNode;
 	int m_enemysKilled = 0;
 	Label* m_UIScore;
@@ -66,6 +69,7 @@ private:
 	int damageCooldown = 60;
 	int footstepCooldown = 60;
 	int pfootstep = 0;
+	int EnemyFireCoolDown = 20;
 
 };
 

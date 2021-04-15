@@ -88,6 +88,37 @@ void Agent::drawHeath()
 	}
 }
 
+void Agent::setFireDistance(int distance)
+{
+	m_fireDistance = distance;
+}
+
+int Agent::getFireDistance()
+{
+	return m_fireDistance;
+}
+
+void Agent::setFireDetectionColour(glm::vec4 colour)
+{
+	m_FireDistanceColour = colour;
+}
+
+void Agent::setIsInFireDetection(bool state)
+{
+	m_isInFireDistance = state;
+	m_FireDistanceColour = (m_isInFireDistance) ? glm::vec4(0, 1, 0, 1) : glm::vec4(0, 0, 1, 1);
+}
+
+bool Agent::getisInFireDistance()
+{
+	return m_isInFireDistance;
+}
+
+glm::vec4 Agent::getFireDetectionColour()
+{
+	return m_FireDistanceColour;
+}
+
 void Agent::move()
 {
 }
