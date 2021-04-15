@@ -1,13 +1,13 @@
 #pragma once
-#ifndef __RANGED_ATTACK_ACTION__
-#define __RANGED_ATTACK_ACTION__
+#ifndef __ATTACK_ACTION__
+#define __ATTACK_ACTION__
 #include "ActionNode.h"
 
-class RangedAttackAction : public ActionNode
+class RangeAttackAction : public ActionNode
 {
 public:
-	RangedAttackAction();
-	virtual ~RangedAttackAction();
+	RangeAttackAction();
+	virtual ~RangeAttackAction();
 
 	virtual void Action(Agent* m_agent) override;
 };

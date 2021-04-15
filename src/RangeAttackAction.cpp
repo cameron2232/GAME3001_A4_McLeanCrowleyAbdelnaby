@@ -1,14 +1,14 @@
 #include "RangeAttackAction.h"
 #include <iostream>
 
-RangedAttackAction::RangedAttackAction()
+RangeAttackAction::RangeAttackAction()
 {
-	name = "Ranged Attack Action";
+	name = "Attack Action";
 }
 
-RangedAttackAction::~RangedAttackAction() = default;
+RangeAttackAction::~RangeAttackAction() = default;
 
-void RangedAttackAction::Action(Agent * m_agent)
+void RangeAttackAction::Action(Agent* m_agent)
 {
-	std::cout << "Performing Ranged Attack Action" << std::endl;
+	std::cout << "Performing Attack Action" << std::endl;
 }

@@ -5,6 +5,7 @@
 #include "DisplayObject.h"
 #include "Health.h"
 #include "EventManager.h"
+#include "AgentType.h"
 #include <glm/vec4.hpp>
 
 class Agent : public DisplayObject
@@ -35,6 +36,8 @@ public:
 	bool getMoving() const;
 	bool getXMoving() const;
 	bool getYMoving() const;
+	AgentType getAgentType() const;
+	int getHealth();
 
 	// setters
 	void setTargetPosition(glm::vec2 newPosition);
@@ -51,9 +54,9 @@ public:
 	void setMoving(bool state);
 	void setXMoving(bool state);
 	void setYMoving(bool state);
-	int getHealth();
 	void setHealthPostion(glm::vec2 postion);
 	void drawHeath();
+	void setAgentType(AgentType type);
 
 private:
 	void m_changeDirection();
@@ -61,6 +64,7 @@ private:
 	glm::vec2 m_currentDirection;
 	glm::vec2 m_targetPosition;
 	Health* m_agentHealth;
+	AgentType m_Type;
 	// LOS
 	float m_LOSDistance;
 	bool m_hasLOS;
