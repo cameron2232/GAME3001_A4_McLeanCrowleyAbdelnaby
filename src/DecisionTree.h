@@ -52,7 +52,6 @@ private:
 	BehindCoverCondition* m_BehindCoverNode;
 	RecentlyHitCondition* m_RecentlyHitNode;
 
-	ActionNode* m_CurrentAction;
 
 	TreeNode* m_currentNode;
 	void m_buildTree();

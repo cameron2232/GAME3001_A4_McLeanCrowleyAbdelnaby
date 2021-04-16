@@ -28,6 +28,7 @@ public:
 	void moveBack();
 	void move() override;
 	void rotate();
+	void flee();
 
 	// getters
 	float getMaxSpeed() const;

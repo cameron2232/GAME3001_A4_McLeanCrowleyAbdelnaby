@@ -85,7 +85,6 @@ void CCEnemy::draw()
 		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getDetectionDistance(), getDetectionColor());
 
 
-		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getFireDistance(), getFireDetectionColour());
 	}
 
 	drawHeath();

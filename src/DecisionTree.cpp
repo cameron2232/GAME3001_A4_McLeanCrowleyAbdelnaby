@@ -61,7 +61,7 @@ void DecisionTree::Update()
 
 	m_RadiusNode->setIsWithinRadius(m_agent->hasDetection());
 
-	m_HealthNode->setHealthCondition(m_agent->getHealth());
+	m_HealthNode->setHealthCondition(m_agent->getHealthState());
 
 	if(m_agent->getAgentType() == RANGED_ENEMY)
 	{

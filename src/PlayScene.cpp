@@ -44,6 +44,11 @@ void PlayScene::draw()
 
 void PlayScene::update()
 {
+	decisionTree->MakeDecision();
+	if (m_pEnemy[0]->getHealth() == 1)
+	{
+		m_pEnemy[0]->setHealthState(true);
+	}
 	//std::cout << m_pPlayerBullets.size() << std::endl;
 	EnemyFireCoolDown--;
 	meleeCoolDown--;
@@ -66,6 +71,7 @@ void PlayScene::update()
 		m_CheckEnemyDetection(m_pEnemy[i]);
 		m_CheckEnemyLOS(m_pEnemy[i]);
 		m_CheckEnemyFireDetection(m_pEnemy[i]);
+		m_CheckEnemyBehindCover(m_pEnemy[i]);
 	}
 
 	if (m_getPatrolMode())
@@ -76,7 +82,7 @@ void PlayScene::update()
 			footstepCooldown = 60;
 			SoundManager::Instance().playSound("EWalk", 0, 2);
 		}
-		decisionTree->Update();
+		//decisionTree->Update();
 		for (int i = 0; i < m_pEnemy.size(); i++)
 		{
 			if (m_pEnemy[i]->getAnimationState() != ENEMY_DAMAGE && m_pEnemy[i]->getAnimationState() != ENEMY_DEATH)
@@ -165,7 +171,6 @@ void PlayScene::update()
 		
 		m_pShip->setAnimationState(PLAYER_RUN);
 	}
-	decisionTree->MakeDecision();
 }
 
 void PlayScene::clean()
@@ -493,14 +498,14 @@ void PlayScene::start()
 		addChild(node);
 
 	m_pEnemy.push_back(new REnemy());
-	m_pEnemy.push_back(new CCEnemy());
+	//m_pEnemy.push_back(new CCEnemy());
 	m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 	m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
 	addChild(m_pEnemy[0]);
 
-	m_pEnemy[1]->getTransform()->position = glm::vec2(100.0f, 15.0f);
-	m_pEnemy[1]->setTargetPosition(m_pNode[5]->getTransform()->position);
-	addChild(m_pEnemy[1]);
+	//m_pEnemy[1]->getTransform()->position = glm::vec2(100.0f, 15.0f);
+	//m_pEnemy[1]->setTargetPosition(m_pNode[5]->getTransform()->position);
+	//addChild(m_pEnemy[1]);
 	// Create Decision Tree
 	decisionTree = new DecisionTree();
 
@@ -740,11 +745,16 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 	{
 		return;
 	}
+	else if (decisionTree->getCurrentNode()->name == "Patrol Action")
+	{
+		m_agent->move();
+	}
 	else if (decisionTree->getCurrentNode()->name == "Move To Player Action")
 	{
+		m_agent->move();
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
-	else if (/*decisionTree->getCurrentNode()->name == "Ranged Attack Action" =*/ m_agent->hasLOS() && m_agent->getisInFireDistance())
+	else if (decisionTree->getCurrentNode()->name == "Ranged Attack Action")
 	{
 		if (EnemyFireCoolDown <= -20)
 		{
@@ -754,6 +764,20 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			EnemyFireCoolDown = 20;
 		}
 	}
+	else if (decisionTree->getCurrentNode()->name == "Move to LOS Action")
+	{
+		m_agent->rotate();
+		m_agent->setTargetPosition(m_pShip->getTransform()->position);
+	}
+	else if (decisionTree->getCurrentNode()->name == "Flee Action")
+	{
+		m_agent->flee();
+		m_agent->setTargetPosition(m_pShip->getTransform()->position);
+	}
+}
+
+void PlayScene::m_CheckEnemyBehindCover(Enemy* enemy)
+{
 }
 
 void PlayScene::GUI_Function()
@@ -968,9 +992,11 @@ void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)
 	if (ShipToTargetDistance <= enemy->getFireDistance())
 	{
 		enemy->setIsInFireDetection(true);
+		enemy->setRangedAttackState(true);
 	}
 	else
 	{
 		enemy->setIsInFireDetection(false);
+		enemy->setRangedAttackState(false);
 	}
 }

@@ -44,6 +44,10 @@ REnemy::REnemy()
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
 	setAnimationState(ENEMY_IDLE);
 	m_buildAnimations();
+
+	setFireDetectionColour(glm::vec4(0, 0, 1, 1));
+	setFireDistance(getLOSDistance() - 100.0f);
+	setIsInFireDetection(false);
 }
 
 
@@ -83,6 +87,7 @@ void REnemy::draw()
 			(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2)) + getCurrentDirection() * getLOSDistance(), getLOSColour());
 
 		// draw detection radius
+		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getFireDistance(), getFireDetectionColour());
 		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getDetectionDistance(), getDetectionColor());
 	}
 
