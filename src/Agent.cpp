@@ -81,12 +81,12 @@ bool Agent::getHealthState() const
 	return m_HealthState;
 }
 
-bool Agent::getRangedAttackState() const
+bool Agent::getRangedAttackState() const //bool for in attack range
 {
 	return m_RangedAttack;
 }
 
-bool Agent::getInRange() const
+bool Agent::getInRange() const //bool for if too close
 {
 	return m_inRangeDistance;
 }
@@ -94,6 +94,18 @@ bool Agent::getInRange() const
 void Agent::setInrange(bool state)
 {
 	m_inRangeDistance = state;
+	std::cout << m_inRangeDistance << std::endl;
+	m_minFireDistanceColour = (m_inRangeDistance) ? glm::vec4(0, 1, 0, 1) : glm::vec4(0, 0, 1, 1);
+}
+
+void Agent::SetHitTimer(int timer)
+{
+	m_RecentlyHitTimer = timer;
+}
+
+int Agent::getHitTimer()
+{
+	return m_RecentlyHitTimer;
 }
 
 bool Agent::getBehindCoverState() const
@@ -174,6 +186,26 @@ bool Agent::getisInFireDistance()
 glm::vec4 Agent::getFireDetectionColour()
 {
 	return m_FireDistanceColour;
+}
+
+void Agent::setMinFireDistance(int distance)
+{
+	m_MinFireDistance = distance;
+}
+
+int Agent::getMinFireDistance()
+{
+	return m_MinFireDistance;
+}
+
+void Agent::setminFireDistanceColour(glm::vec4 colour)
+{
+	m_minFireDistanceColour = colour;
+}
+
+glm::vec4 Agent::getMinFireDistancecolour()
+{
+	return m_minFireDistanceColour;
 }
 
 void Agent::move()

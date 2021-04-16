@@ -42,6 +42,9 @@ CCEnemy::CCEnemy()
 
 	Hitbox = new SDL_FRect({ getTransform()->position.x, getTransform()->position.y, 64.0f, 64.0f });
 
+	decisionTree = new DecisionTree();
+	decisionTree->setAgent(this);
+
 	m_buildAnimations();
 }
 

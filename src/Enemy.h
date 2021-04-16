@@ -7,6 +7,8 @@
 #include "PlayerAnimationState.h"
 #include <glm/vec4.hpp>
 
+
+#include "DecisionTree.h"
 #include "Sprite.h"
 
 class Enemy: public Agent
@@ -59,6 +61,11 @@ public:
 	glm::vec2 m_targetDirection;
 	float m_magnitudeDistance;
 	float m_accelerationRate;
+
+	//Decision Tree
+	DecisionTree* decisionTree;
+	DecisionTree* getDecisionTree();
+	
 };
 
 

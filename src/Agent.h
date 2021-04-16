@@ -70,6 +70,8 @@ public:
 	void setBehindCoverState(bool state);
 	void setHitState(bool state);
 	void setInrange(bool state);
+	void SetHitTimer(int timer);
+	int getHitTimer();
 
 
 	void setFireDistance(int distance);
@@ -78,6 +80,13 @@ public:
 	void setIsInFireDetection(bool state);
 	bool getisInFireDistance();
 	glm::vec4 getFireDetectionColour();
+
+//Min fire distance
+
+	void setMinFireDistance(int distance);
+	int getMinFireDistance();
+	void setminFireDistanceColour(glm::vec4 colour);
+	glm::vec4 getMinFireDistancecolour();
 private:
 	void m_changeDirection();
 	float m_currentHeading;
@@ -106,6 +115,10 @@ private:
 	int m_fireDistance;
 	bool m_isInFireDistance;
 	glm::vec4 m_FireDistanceColour;
+	int m_RecentlyHitTimer;
+
+	int m_MinFireDistance;
+	glm::vec4 m_minFireDistanceColour;
 
 	//Debug
 	bool m_DebugEnabled;

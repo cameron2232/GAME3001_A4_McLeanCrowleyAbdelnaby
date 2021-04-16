@@ -55,10 +55,16 @@ private:
 	bool m_getDebugMode() const;
 	void m_setPatrolMode(bool state);
 	bool m_getPatrolMode() const;
+	
 	void m_CheckEnemyHealth(Enemy* enemy);
+	void m_CheckCloseCombatRange(Enemy* enemy);
 	void m_CheckEnemyFireDetection(Enemy* enemy);
+	void m_CheckBehindCover(Enemy* enemy);
+	void m_CheckTooClose(Enemy* enemy);
+	
+	
 	int cooldown = 20;
-	DecisionTree* decisionTree;
+	//DecisionTree* decisionTree;
 	const float m_playerSpeed = 5.0f;
 	MeleeAttack* m_meleeActtack;
 	int meleeCoolDown = 30;
