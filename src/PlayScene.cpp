@@ -30,7 +30,7 @@ void PlayScene::draw()
 	{
 		addChild(m_pEnemyBullets[i]);
 	}
-
+	//Util::DrawLine(m_pEnemy[0]->getTransform()->position, m_pShip->getTransform()->position, glm::vec4(1, 0, 0, 1));
 
 	drawDisplayList();
 
@@ -44,7 +44,10 @@ void PlayScene::draw()
 
 void PlayScene::update()
 {
-	decisionTree->MakeDecision();
+	for(auto enemy : m_pEnemy)
+	{
+		enemy->getDecisionTree()->MakeDecision();
+	}
 	if (m_pEnemy[0]->getHealth() == 1)
 	{
 		m_pEnemy[0]->setHealthState(true);
@@ -67,11 +70,20 @@ void PlayScene::update()
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
 		m_CheckShipLOS(m_pEnemy[i]);
-		m_CheckShipDetection(m_pEnemy[i]);
 		m_CheckEnemyDetection(m_pEnemy[i]);
 		m_CheckEnemyLOS(m_pEnemy[i]);
 		m_CheckEnemyFireDetection(m_pEnemy[i]);
-		m_CheckEnemyBehindCover(m_pEnemy[i]);
+		m_CheckTooClose(m_pEnemy[i]);
+		m_CheckBehindCover(m_pEnemy[i]);
+		if(m_pEnemy[i]->getHitState())
+		{
+			m_pEnemy[i]->SetHitTimer(m_pEnemy[i]->getHitTimer() - 1);
+			if(m_pEnemy[i]->getHitTimer() <= 0)
+			{
+				m_pEnemy[i]->SetHitTimer(0);
+				m_pEnemy[i]->setHitState(false);
+			}
+		}
 	}
 
 	if (m_getPatrolMode())
@@ -507,19 +519,15 @@ void PlayScene::start()
 	//m_pEnemy[1]->setTargetPosition(m_pNode[5]->getTransform()->position);
 	//addChild(m_pEnemy[1]);
 	// Create Decision Tree
-	decisionTree = new DecisionTree();
-
-	decisionTree->setAgent(m_pEnemy[0]);
-
-
-	decisionTree->Display();
+	
 
 
 	m_meleeActtack = new MeleeAttack(m_pShip->getCurrentHeading());
 
 
 	std::cout << "------------------------" << std::endl;
-	std::cout << decisionTree->MakeDecision() << std::endl;
+	for (auto enemy : m_pEnemy)
+		enemy->getDecisionTree()->MakeDecision();
 	std::cout << "------------------------\n" << std::endl;
 
 	SoundManager::Instance().load("../Assets/audio/bgmusic.mp3", "BGMusic", SOUND_MUSIC);
@@ -646,6 +654,8 @@ void PlayScene::CollisionsUpdate()
 						damageCooldown = 60;
 						m_pEnemy[j]->setAnimationState(ENEMY_DAMAGE);
 						m_pEnemy[j]->setHealth(m_pEnemy[j]->getHealth() - 1);
+						m_pEnemy[j]->setHitState(true);
+						m_pEnemy[i]->SetHitTimer(600);
 					}
 				}
 
@@ -745,16 +755,16 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 	{
 		return;
 	}
-	else if (decisionTree->getCurrentNode()->name == "Patrol Action")
+	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Patrol Action")
 	{
 		m_agent->move();
 	}
-	else if (decisionTree->getCurrentNode()->name == "Move To Player Action")
+	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Player Action")
 	{
 		m_agent->move();
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
-	else if (decisionTree->getCurrentNode()->name == "Ranged Attack Action")
+	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Ranged Attack Action")
 	{
 		if (EnemyFireCoolDown <= -20)
 		{
@@ -764,12 +774,12 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			EnemyFireCoolDown = 20;
 		}
 	}
-	else if (decisionTree->getCurrentNode()->name == "Move to LOS Action")
+	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
 	{
 		m_agent->rotate();
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
-	else if (decisionTree->getCurrentNode()->name == "Flee Action")
+	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Flee Action")
 	{
 		m_agent->flee();
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
@@ -823,7 +833,6 @@ void PlayScene::GUI_Function()
 			m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 			m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
 			addChild(m_pEnemy[0]);
-			decisionTree->setAgent(m_pEnemy[0]);
 		}
 		else
 		{
@@ -889,32 +898,32 @@ void PlayScene::m_CheckShipLOS(DisplayObject* target_object)
 	}
 }
 
-void PlayScene::m_CheckShipDetection(DisplayObject* target_object)
-{
-	// if ship to target distance is less than or equal to detection Distance
-	auto ShipToTargetDistance = Util::distance(m_pShip->getTransform()->position, target_object->getTransform()->position);
-	if (ShipToTargetDistance <= m_pShip->getDetectionDistance())
-	{
-		std::vector<DisplayObject*> contactList;
-		for (auto object : getDisplayList())
-		{
-			// check if object is farther than than the target
-			auto ShipToObjectDistance = Util::distance(m_pShip->getTransform()->position, object->getTransform()->position);
-
-			if (ShipToObjectDistance <= ShipToTargetDistance)
-			{
-				if ((object->getType() != m_pShip->getType()) && (object->getType() != target_object->getType()))
-				{
-					contactList.push_back(object);
-				}
-			}
-		}
-		contactList.push_back(target_object); // add the target to the end of the list
-		auto hasDetection = CollisionManager::detectionCheck(m_pShip->getTransform()->position, m_pShip->getDetectionDistance(), contactList, target_object);
-
-		m_pShip->setHasDetection(hasDetection);
-	}
-}
+//void PlayScene::m_CheckShipDetection(DisplayObject* target_object)
+//{
+//	// if ship to target distance is less than or equal to detection Distance
+//	auto ShipToTargetDistance = Util::distance(m_pShip->getTransform()->position, target_object->getTransform()->position);
+//	if (ShipToTargetDistance <= m_pShip->getDetectionDistance())
+//	{
+//		std::vector<DisplayObject*> contactList;
+//		for (auto object : getDisplayList())
+//		{
+//			// check if object is farther than than the target
+//			auto ShipToObjectDistance = Util::distance(m_pShip->getTransform()->position, object->getTransform()->position);
+//
+//			if (ShipToObjectDistance <= ShipToTargetDistance)
+//			{
+//				if ((object->getType() != m_pShip->getType()) && (object->getType() != target_object->getType()))
+//				{
+//					contactList.push_back(object);
+//				}
+//			}
+//		}
+//		contactList.push_back(target_object); // add the target to the end of the list
+//		auto hasDetection = CollisionManager::detectionCheck(m_pShip->getTransform()->position, m_pShip->getDetectionDistance(), contactList, target_object);
+//
+//		m_pShip->setHasDetection(hasDetection);
+//	}
+//}
 
 void PlayScene::m_CheckEnemyDetection(Enemy* enemy)
 {
@@ -998,6 +1007,19 @@ void PlayScene::m_CheckEnemyHealth(Enemy* enemy)
 	}
 }
 
+void PlayScene::m_CheckCloseCombatRange(Enemy* enemy)
+{
+	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
+	if(ShipToTargetDistance <= 50)
+	{
+		enemy->setCloseCombat(true);
+	}
+	else
+	{
+		enemy->setCloseCombat(false);
+	}
+}
+
 void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)
 {
 	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
@@ -1012,3 +1034,50 @@ void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)
 		enemy->setRangedAttackState(false);
 	}
 }
+
+void PlayScene::m_CheckTooClose(Enemy* enemy)
+{
+	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
+	if (ShipToTargetDistance <= enemy->getMinFireDistance())
+	{
+		enemy->setInrange(true);
+	}
+	else
+	{
+		enemy->setInrange(false);
+	}
+}
+
+void PlayScene::m_CheckBehindCover(Enemy* enemy)
+{
+	
+	//Get line between enemy and player
+	//Check if line intercepts an object
+	//If line intercepts object, true
+	//else, false
+
+	
+
+	auto Distance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position); //Distance from enemy to ship
+	for (auto object : getDisplayList())
+	{
+		if (object->getType() != OBSTACLE)
+		{
+			continue;
+		}
+		auto DistanceToObject = Util::distance(enemy->getTransform()->position, object->getTransform()->position); //Distance from enemy to object
+		auto Collision = CollisionManager::lineRectCheck(enemy->getTransform()->position, m_pShip->getTransform()->position, object->getTransform()->position,
+			object->getWidth(), object->getHeight()); //if line between ship and enemy hit an obstacle
+		if (Collision) //if line to player hits object
+		{
+			enemy->setBehindCoverState(true);
+			return;
+		}
+		else 
+		{
+			enemy->setBehindCoverState(false);
+		}
+	}
+}
+
+

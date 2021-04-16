@@ -29,15 +29,15 @@ REnemy::REnemy()
 	m_accelerationRate = 1.0f;
 	m_maxSpeed = 3.0f;
 
-	setFireDistance(getLOSDistance());
-	setIsInFireDetection(false);
-	setFireDetectionColour(glm::vec4(1, 0, 0, 1));
+	//setFireDistance(getLOSDistance());
+	//setIsInFireDetection(false);
+	//setFireDetectionColour(glm::vec4(1, 0, 0, 1));
 	setAgentType(RANGED_ENEMY);
 	
 	setLOSDistance(400.0f); // 5 ppf x 80 feet
 	setLOSColour(glm::vec4(1, 0, 0, 1));
 	setHasLOS(false);
-	setDetectionDistance(200.0f);
+	setDetectionDistance(getLOSDistance() - 50.0f); //Detection
 	setDetectionColor(glm::vec4(0, 0, 1, 1));
 	setHasDetection(false);
 	setHealth(3);
@@ -45,9 +45,17 @@ REnemy::REnemy()
 	setAnimationState(ENEMY_IDLE);
 	m_buildAnimations();
 
-	setFireDetectionColour(glm::vec4(0, 0, 1, 1));
-	setFireDistance(getLOSDistance() - 100.0f);
+	setFireDetectionColour(glm::vec4(1, 0, 0, 1));
+	setFireDistance(getLOSDistance() - 100.0f); //Can fire in this range
 	setIsInFireDetection(false);
+
+	//Minimum firing distance
+	setMinFireDistance(getLOSDistance() - 200.0f);
+	setminFireDistanceColour(glm::vec4(0, 0, 1, 1));
+	setInrange(false);
+
+	decisionTree = new DecisionTree();
+	decisionTree->setAgent(this);
 }
 
 
@@ -89,6 +97,8 @@ void REnemy::draw()
 		// draw detection radius
 		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getFireDistance(), getFireDetectionColour());
 		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getDetectionDistance(), getDetectionColor());
+
+		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getMinFireDistance(), getMinFireDistancecolour());
 	}
 
 	drawHeath();
