@@ -6,7 +6,9 @@ RangedAttackAction::RangedAttackAction()
 	name = "Ranged Attack Action";
 }
 
-RangedAttackAction::~RangedAttackAction() = default;
+RangedAttackAction::~RangedAttackAction()
+= default;
+
 
 void RangedAttackAction::Action(Agent * m_agent)
 {

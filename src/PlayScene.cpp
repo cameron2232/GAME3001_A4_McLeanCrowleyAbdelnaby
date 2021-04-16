@@ -26,6 +26,10 @@ void PlayScene::draw()
 	{
 		addChild(m_pPlayerBullets[i]);
 	}
+	for (int i = 0; i < m_pEnemyBullets.size(); i++)
+	{
+		addChild(m_pEnemyBullets[i]);
+	}
 
 
 	drawDisplayList();
@@ -41,16 +45,27 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	//std::cout << m_pPlayerBullets.size() << std::endl;
+	EnemyFireCoolDown--;
 	meleeCoolDown--;
 	m_setUIScore();
 	CollisionsUpdate();
 	updateDisplayList();
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
+		if (m_pEnemy[i] != nullptr)
+		{
+			m_DecisionMaking(m_pEnemy[i]);
+		}
+	}
+
+	//m_DecisionMaking();
+	for (int i = 0; i < m_pEnemy.size(); i++)
+	{
 		m_CheckShipLOS(m_pEnemy[i]);
 		m_CheckShipDetection(m_pEnemy[i]);
 		m_CheckEnemyDetection(m_pEnemy[i]);
 		m_CheckEnemyLOS(m_pEnemy[i]);
+		m_CheckEnemyFireDetection(m_pEnemy[i]);
 	}
 
 	if (m_getPatrolMode())
@@ -651,9 +666,93 @@ void PlayScene::CollisionsUpdate()
 			}
 		}
 	}
+
+	for (int i = 0; i < m_pEnemyBullets.size(); i++)
+	{
+		if (m_pEnemyBullets[i] != nullptr)
+		{
+			if (m_pEnemyBullets[i]->getTransform()->position.x >= 900)
+			{
+				removeChild(m_pEnemyBullets[i]);
+				m_pEnemyBullets[i] = nullptr;
+				m_pEnemyBullets.erase(m_pEnemyBullets.begin() + i);
+				m_pEnemyBullets.shrink_to_fit();
+				break;
+			}
+			if (m_pEnemyBullets[i]->getTransform()->position.x <= -100)
+			{
+				removeChild(m_pEnemyBullets[i]);
+				m_pEnemyBullets[i] = nullptr;
+				m_pEnemyBullets.erase(m_pEnemyBullets.begin() + i);
+				m_pEnemyBullets.shrink_to_fit();
+				break;
+			}
+			if (m_pEnemyBullets[i]->getTransform()->position.y <= -100)
+			{
+				removeChild(m_pEnemyBullets[i]);
+				m_pEnemyBullets[i] = nullptr;
+				m_pEnemyBullets.erase(m_pEnemyBullets.begin() + i);
+				m_pEnemyBullets.shrink_to_fit();
+				break;
+			}
+			if (m_pEnemyBullets[i]->getTransform()->position.y >= 700)
+			{
+				removeChild(m_pEnemyBullets[i]);
+				m_pEnemyBullets[i] = nullptr;
+				m_pEnemyBullets.erase(m_pEnemyBullets.begin() + i);
+				m_pEnemyBullets.shrink_to_fit();
+				break;
+			}
+
+			for (int i = 0; i < m_pEnemyBullets.size(); i++)
+			{
+
+				if (CollisionManager::AABBCheck(m_pEnemyBullets[i],m_pShip))
+				{
+					m_pShip->setAnimationState(ENEMY_DAMAGE);
+					m_pShip->setHealth(m_pShip->getHealth() - 1);
+				}
+
+
+			}
+			for (auto obstacle : m_pObstacle)
+			{
+				if (CollisionManager::AABBCheck(m_pEnemyBullets[i], obstacle))
+				{
+					removeChild(m_pEnemyBullets[i]);
+					m_pEnemyBullets[i] = nullptr;
+					m_pEnemyBullets.erase(m_pEnemyBullets.begin() + i);
+					m_pEnemyBullets.shrink_to_fit();
+					break;
+				}
+			}
+		}
+	}
 }
 
-void PlayScene::GUI_Function() 
+void PlayScene::m_DecisionMaking(Enemy* m_agent)
+{
+	if (m_agent == nullptr)
+	{
+		return;
+	}
+	else if (decisionTree->getCurrentNode()->name == "Move To Player Action")
+	{
+		m_agent->setTargetPosition(m_pShip->getTransform()->position);
+	}
+	else if (/*decisionTree->getCurrentNode()->name == "Ranged Attack Action" =*/ m_agent->hasLOS() && m_agent->getisInFireDistance())
+	{
+		if (EnemyFireCoolDown <= -20)
+		{
+			m_pEnemyBullets.push_back(new Bullet(m_agent->getTransform()->position.x + m_agent->getWidth() / 2, m_agent->getTransform()->position.y + m_agent->getHeight() / 2, m_agent->getCurrentHeading()));
+			m_pEnemyBullets[m_pEnemyBullets.size() - 1]->setRotation(m_agent->getCurrentHeading());
+			std::cout << "YESSSSSS" << std::endl;
+			EnemyFireCoolDown = 20;
+		}
+	}
+}
+
+void PlayScene::GUI_Function()
 {
 	//TODO: We need to deal with this
 	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
@@ -858,4 +957,17 @@ void PlayScene::m_setPatrolMode(bool state)
 bool PlayScene::m_getPatrolMode() const
 {
 	return m_isPatrolling;
+}
+
+void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)
+{
+	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
+	if (ShipToTargetDistance <= enemy->getFireDistance())
+	{
+		enemy->setIsInFireDetection(true);
+	}
+	else
+	{
+		enemy->setIsInFireDetection(false);
+	}
 }

@@ -29,6 +29,9 @@ Enemy::Enemy() : m_maxSpeed(10.0f), m_currentAnimationState(ENEMY_IDLE)
 	m_maxSpeed = 3.0f;
 	
 	setLOSDistance(400.0f); // 5 ppf x 80 feet
+	setFireDistance(getLOSDistance());
+	setIsInFireDetection(false);
+	setFireDetectionColour(glm::vec4(1, 0, 0, 1));
 	setLOSColour(glm::vec4(1, 0, 0, 1));
 	setHasLOS(false);
 	setDetectionDistance(200.0f);
@@ -79,6 +82,9 @@ void Enemy::draw()
 
 		// draw detection radius
 		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getDetectionDistance(), getDetectionColor());
+
+
+		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getFireDistance(), getFireDetectionColour());
 	}
 
 	drawHeath();
@@ -164,6 +170,32 @@ void Enemy::move()
 	getRigidBody()->velocity = Util::clamp(getRigidBody()->velocity, m_maxSpeed);
 
 	getTransform()->position += getRigidBody()->velocity;
+}
+
+void Enemy::rotate()
+{
+	auto deltaTime = TheGame::Instance()->getDeltaTime();
+
+	m_targetDirection = getTargetPosition() - getTransform()->position;
+
+	// normalized direction
+	m_targetDirection = Util::normalize(m_targetDirection);
+
+	auto target_rotation = Util::signedAngle(getCurrentDirection(), m_targetDirection);
+
+	auto turn_sensitivity = 5.0f;
+
+	if (abs(target_rotation) > turn_sensitivity)
+	{
+		if (target_rotation > 0.0f)
+		{
+			setCurrentHeading(getCurrentHeading() + m_turnRate);
+		}
+		else if (target_rotation < 0.0f)
+		{
+			setCurrentHeading(getCurrentHeading() - m_turnRate);
+		}
+	}
 }
 
 float Enemy::getTargetDistance() const

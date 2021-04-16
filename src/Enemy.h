@@ -26,7 +26,7 @@ public:
 	void moveForward();
 	void moveBack();
 	void move() override;
-
+	void rotate();
 	// getters
 	float getMaxSpeed() const;
 	float getTargetDistance() const;

@@ -67,6 +67,11 @@ void DecisionTree::Update()
 		m_CurrentAction = new PatrolAction;
 		m_CurrentAction->Action(getAgent());
 	}
+	if (getCurrentNode() == m_treeNodeList[4])
+	{
+		m_CurrentAction = new MoveToPlayerAction;
+		m_CurrentAction->Action(getAgent());
+	}
 	
 }
 
