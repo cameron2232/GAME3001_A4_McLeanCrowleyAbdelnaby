@@ -8,7 +8,7 @@
 #include "HealthCondition.h"
 #include "BehindCoverCondition.h"
 #include "AttackRangeCondition.h"
-#include "RangeDistanceCondition.h"
+#include "TooCloseCondition.h"
 #include "TreeNode.h"
 #include "TreeNodeType.h"
 #include "PatrolAction.h"
@@ -48,7 +48,7 @@ private:
 	CloseCombatCondition* m_CloseCombatNode;
 	HealthCondition* m_HealthNode;
 	AttackRangeCondition* m_AttackRangeNode;
-	RangeDistanceCondition* m_RangeDistanceNode;
+	TooCloseCondition* m_RangeDistanceNode;
 	BehindCoverCondition* m_BehindCoverNode;
 	RecentlyHitCondition* m_RecentlyHitNode;
 

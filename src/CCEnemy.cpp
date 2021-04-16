@@ -38,8 +38,9 @@ CCEnemy::CCEnemy()
 	setHealth(3);
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
 	setAnimationState(ENEMY_IDLE);
+	setAgentType(CLOSE_COMBAT_ENEMY);
 
-	Hitbox = new SDL_Rect({ getTransform()->position.x, getTransform()->position.y, 64, 64 });
+	Hitbox = new SDL_FRect({ getTransform()->position.x, getTransform()->position.y, 64.0f, 64.0f });
 
 	m_buildAnimations();
 }

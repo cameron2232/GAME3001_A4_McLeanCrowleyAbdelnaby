@@ -165,7 +165,7 @@ void PlayScene::update()
 		
 		m_pShip->setAnimationState(PLAYER_RUN);
 	}
-		
+	decisionTree->MakeDecision();
 }
 
 void PlayScene::clean()
@@ -497,12 +497,15 @@ void PlayScene::start()
 	m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 	m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
 	addChild(m_pEnemy[0]);
+
+	m_pEnemy[1]->getTransform()->position = glm::vec2(100.0f, 15.0f);
+	m_pEnemy[1]->setTargetPosition(m_pNode[5]->getTransform()->position);
+	addChild(m_pEnemy[1]);
 	// Create Decision Tree
 	decisionTree = new DecisionTree();
-	for (int i = 0; i < m_pEnemy.size(); i++)
-	{
-		decisionTree->setAgent(m_pEnemy[i]);
-	}
+
+	decisionTree->setAgent(m_pEnemy[0]);
+
 
 	decisionTree->Display();
 
