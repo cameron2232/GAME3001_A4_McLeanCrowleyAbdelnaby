@@ -6,8 +6,9 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-CCEnemy::CCEnemy() : m_maxSpeed(10.0f), m_currentAnimationState(ENEMY_IDLE)
+CCEnemy::CCEnemy()
 {
+	m_maxSpeed = 10.0f;
 	TextureManager::Instance()->loadSpriteSheet("../Assets/sprites/EnemyGuard.txt", "../Assets/sprites/EnemyGuard.png", "GuardSheet");
 
 	//	auto size = TextureManager::Instance()->getTextureSize("ship");
@@ -29,9 +30,6 @@ CCEnemy::CCEnemy() : m_maxSpeed(10.0f), m_currentAnimationState(ENEMY_IDLE)
 	m_maxSpeed = 3.0f;
 
 	setLOSDistance(400.0f); // 5 ppf x 80 feet
-	setFireDistance(getLOSDistance());
-	setIsInFireDetection(false);
-	setFireDetectionColour(glm::vec4(1, 0, 0, 1));
 	setLOSColour(glm::vec4(1, 0, 0, 1));
 	setHasLOS(false);
 	setDetectionDistance(200.0f);
@@ -40,6 +38,8 @@ CCEnemy::CCEnemy() : m_maxSpeed(10.0f), m_currentAnimationState(ENEMY_IDLE)
 	setHealth(3);
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
 	setAnimationState(ENEMY_IDLE);
+
+	Hitbox = new SDL_Rect({ getTransform()->position.x, getTransform()->position.y, 64, 64 });
 
 	m_buildAnimations();
 }
@@ -104,228 +104,49 @@ void CCEnemy::clean()
 {
 }
 
-void CCEnemy::turnRight()
-{
-	setCurrentHeading(getCurrentHeading() + m_turnRate);
-	if (getCurrentHeading() >= 360)
-	{
-		setCurrentHeading(getCurrentHeading() - 360.0f);;
-	}
-}
-
-void CCEnemy::turnLeft()
-{
-	setCurrentHeading(getCurrentHeading() - m_turnRate);
-	if (getCurrentHeading() < 0)
-	{
-		setCurrentHeading(getCurrentHeading() + 360.0f);
-	}
-}
-
-void CCEnemy::moveForward()
-{
-	getRigidBody()->velocity = getCurrentDirection() * m_maxSpeed;
-}
-
-void CCEnemy::moveBack()
-{
-	getRigidBody()->velocity = getCurrentDirection() * -m_maxSpeed;
-}
-
-void CCEnemy::move()
-{
-	//getTransform()->position += getRigidBody()->velocity;
-	//getRigidBody()->velocity *= 0.9f;
-	auto deltaTime = TheGame::Instance()->getDeltaTime();
-
-	m_targetDirection = getTargetPosition() - getTransform()->position;
-
-	// normalized direction
-	m_targetDirection = Util::normalize(m_targetDirection);
-
-	auto target_rotation = Util::signedAngle(getCurrentDirection(), m_targetDirection);
-
-	auto turn_sensitivity = 5.0f;
-
-	if (abs(target_rotation) > turn_sensitivity)
-	{
-		if (target_rotation > 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() + m_turnRate);
-		}
-		else if (target_rotation < 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() - m_turnRate);
-		}
-	}
-
-
-
-	getRigidBody()->acceleration = getCurrentDirection() * m_accelerationRate;
-
-	getRigidBody()->velocity += getCurrentDirection() * (deltaTime)+
-		0.5f * getRigidBody()->acceleration * (deltaTime);
-
-
-	getRigidBody()->velocity = Util::clamp(getRigidBody()->velocity, m_maxSpeed);
-
-	getTransform()->position += getRigidBody()->velocity;
-}
-
-void Enemy::rotate()
-{
-	auto deltaTime = TheGame::Instance()->getDeltaTime();
-
-	m_targetDirection = getTargetPosition() - getTransform()->position;
-
-	// normalized direction
-	m_targetDirection = Util::normalize(m_targetDirection);
-
-	auto target_rotation = Util::signedAngle(getCurrentDirection(), m_targetDirection);
-
-	auto turn_sensitivity = 5.0f;
-
-	if (abs(target_rotation) > turn_sensitivity)
-	{
-		if (target_rotation > 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() + m_turnRate);
-		}
-		else if (target_rotation < 0.0f)
-		{
-			setCurrentHeading(getCurrentHeading() - m_turnRate);
-		}
-	}
-}
-
-float CCEnemy::getTargetDistance() const
-{
-	return m_magnitudeDistance;
-}
-
-
-
-
-float CCEnemy::getMaxSpeed() const
-{
-	return m_maxSpeed;
-}
-
-void CCEnemy::setMaxSpeed(const float newSpeed)
-{
-	m_maxSpeed = newSpeed;
-}
-
-void CCEnemy::setAnimationState(PlayerAnimationState new_state)
-{
-	m_currentAnimationState = new_state;
-}
-
-PlayerAnimationState CCEnemy::getAnimationState()
-{
-	return m_currentAnimationState;
-}
-
-Animation& CCEnemy::getAnimation(const std::string & name)
-{
-	return m_pAnimations[name];
-}
-
-void CCEnemy::setSpriteSheet(SpriteSheet * sprite_sheet)
-{
-	m_CCEnemyAnimation = sprite_sheet;
-}
-
-void CCEnemy::setAnimation(const Animation & animation)
-{
-	if (!m_animationsExists(animation.name))
-	{
-		m_pAnimations[animation.name] = animation;
-	}
-}
-
 void CCEnemy::m_buildAnimations()
 {
 	Animation idleAnimation = Animation();
 
 	idleAnimation.name = "idle";
-	idleAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-idle-1"));
-	idleAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-idle-2"));
-	idleAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-idle-3"));
-	idleAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-idle-4"));
+	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-1"));
+	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-2"));
+	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-3"));
+	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-4"));
 
 	setAnimation(idleAnimation);
 
 	Animation runAnimation = Animation();
 
 	runAnimation.name = "run";
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-1"));
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-2"));
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-3"));
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-4"));
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-5"));
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-6"));
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-7"));
-	runAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-walking-8"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-1"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-2"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-3"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-4"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-5"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-6"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-7"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-8"));
 
 	setAnimation(runAnimation);
 
 	Animation damageAnimation = Animation();
 
 	damageAnimation.name = "damage";
-	damageAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-damage-1"));
-	damageAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-damage-2"));
-	damageAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-damage-3"));
-	damageAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-damage-4"));
+	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-1"));
+	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-2"));
+	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-3"));
+	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-4"));
 
 	setAnimation(damageAnimation);
 
 	Animation deathAnimation = Animation();
 
 	deathAnimation.name = "death";
-	deathAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-death-1"));
-	deathAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-death-2"));
-	deathAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-death-3"));
-	deathAnimation.frames.push_back(m_CCEnemyAnimation->getFrame("guard-death-4"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-1"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-2"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-3"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-4"));
 
 	setAnimation(deathAnimation);
-}
-
-bool CCEnemy::m_animationsExists(const std::string & id)
-{
-	return m_pAnimations.find(id) != m_pAnimations.end();
-}
-
-void CCEnemy::m_checkBounds()
-{
-
-	if (getTransform()->position.x + getWidth() > Config::SCREEN_WIDTH)
-	{
-		getTransform()->position = glm::vec2(800.0f - getWidth(), getTransform()->position.y);
-	}
-
-	if (getTransform()->position.x < 0)
-	{
-		getTransform()->position = glm::vec2(0.0f, getTransform()->position.y);
-	}
-
-	if (getTransform()->position.y + getHeight() > Config::SCREEN_HEIGHT)
-	{
-		getTransform()->position = glm::vec2(getTransform()->position.x, 600.0f - getHeight());
-	}
-
-	if (getTransform()->position.y < 0)
-	{
-		getTransform()->position = glm::vec2(getTransform()->position.x, 0.0f);
-	}
-
-}
-
-void CCEnemy::m_reset()
-{
-	getRigidBody()->isColliding = false;
-	const int halfWidth = getWidth() * 0.5f;
-	const auto xComponent = rand() % (640 - getWidth()) + halfWidth + 1;
-	const auto yComponent = -getHeight();
-	getTransform()->position = glm::vec2(xComponent, yComponent);
 }

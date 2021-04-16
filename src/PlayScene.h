@@ -44,12 +44,12 @@ private:
 	Target* m_pTarget;
 	Ship* m_pShip;
 	Obstacle* m_pObstacle[5];
-	std::vector<Agent*> m_pEnemy;
+	std::vector<Enemy*> m_pEnemy;
 	std::vector<Node*> m_pNode;
 	void m_CheckShipLOS(DisplayObject* object);
 	void m_CheckShipDetection(DisplayObject* object);
-	void m_CheckEnemyDetection(REnemy* enemy);
-	void m_CheckEnemyLOS(REnemy* enemy);
+	void m_CheckEnemyDetection(Enemy* enemy);
+	void m_CheckEnemyLOS(Enemy* enemy);
 	void m_setDebugMode(bool state);
 	bool m_getDebugMode() const;
 	void m_setPatrolMode(bool state);

@@ -492,7 +492,8 @@ void PlayScene::start()
 	for (auto node : m_pNode)
 		addChild(node);
 
-	m_pEnemy.push_back(new Enemy());
+	m_pEnemy.push_back(new REnemy());
+	m_pEnemy.push_back(new CCEnemy());
 	m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 	m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
 	addChild(m_pEnemy[0]);
@@ -765,7 +766,6 @@ void PlayScene::GUI_Function()
 	
 	ImGui::Begin("GAME3001 - Lab 7", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 
-
 	ImGui::Separator();
 	
 	if (ImGui::Button("Start"))
@@ -792,7 +792,7 @@ void PlayScene::GUI_Function()
 
 		if (m_pEnemy.size() == 0)
 		{
-			m_pEnemy.push_back(new Enemy());
+			m_pEnemy.push_back(new REnemy());
 			m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 			m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
 			addChild(m_pEnemy[0]);
