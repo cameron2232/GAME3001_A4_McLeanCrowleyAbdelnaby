@@ -187,7 +187,7 @@
     <ClCompile Include="..\src\Obstacle.cpp" />
     <ClCompile Include="..\src\PatrolAction.cpp" />
     <ClCompile Include="..\src\RadiusCondition.cpp" />
-    <ClCompile Include="..\src\RangeDistanceCondition.cpp" />
+    <ClCompile Include="..\src\TooCloseCondition.cpp" />
     <ClCompile Include="..\src\RecentlyHitCondition.cpp" />
     <ClCompile Include="..\src\REnemy.cpp" />
     <ClCompile Include="..\src\SpaceShip.cpp" />
@@ -259,7 +259,7 @@
     <ClInclude Include="..\src\Obstacle.h" />
     <ClInclude Include="..\src\PatrolAction.h" />
     <ClInclude Include="..\src\RadiusCondition.h" />
-    <ClInclude Include="..\src\RangeDistanceCondition.h" />
+    <ClInclude Include="..\src\TooCloseCondition.h" />
     <ClInclude Include="..\src\RecentlyHitCondition.h" />
     <ClInclude Include="..\src\REnemy.h" />
     <ClInclude Include="..\src\SoundType.h" />

@@ -62,6 +62,7 @@ public:
 	void setYMoving(bool state);
 	void setHealthPostion(glm::vec2 postion);
 	void drawHeath();
+	//states for decision tree
 	void setAgentType(AgentType type);
 	void setCloseCombat(bool state);
 	void setHealthState(bool state);
@@ -86,14 +87,16 @@ private:
 	AgentType m_Type;
 	// LOS
 	float m_LOSDistance;
+	glm::vec4 m_LOSColour;
+	//Conditions
 	bool m_hasLOS;
 	bool m_CloseCombatRange;
 	bool m_HealthState;
-	bool m_RangedAttack;
-	bool m_inRangeDistance;
+	bool m_RangedAttack; //too far?
+	bool m_inRangeDistance; //too close?
 	bool m_isBehindCover;
 	bool m_isRecentlyHit;
-	glm::vec4 m_LOSColour;
+
 
 	//Detection Radius
 	float m_DetectionDistance;

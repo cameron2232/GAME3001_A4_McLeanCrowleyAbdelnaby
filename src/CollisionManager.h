@@ -18,6 +18,8 @@ public:
 
 	static bool AABBCheck(GameObject* object1, GameObject* object2);
 
+	static bool AABBRectCheck(SDL_FRect* object1, GameObject* object2);
+
 	static bool lineLineCheck(glm::vec2 line1_start, glm::vec2 line1_end, glm::vec2 line2_start, glm::vec2 line2_end);
 
 	static bool lineRectCheck(glm::vec2 line1_start, glm::vec2 line1_end, glm::vec2 rec_start, float rect_width, float rect_height);

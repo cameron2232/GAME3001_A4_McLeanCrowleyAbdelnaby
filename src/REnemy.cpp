@@ -32,6 +32,7 @@ REnemy::REnemy()
 	setFireDistance(getLOSDistance());
 	setIsInFireDetection(false);
 	setFireDetectionColour(glm::vec4(1, 0, 0, 1));
+	setAgentType(RANGED_ENEMY);
 	
 	setLOSDistance(400.0f); // 5 ppf x 80 feet
 	setLOSColour(glm::vec4(1, 0, 0, 1));

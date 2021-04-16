@@ -216,9 +216,6 @@
     <ClCompile Include="..\src\AttackRangeCondition.cpp">
       <Filter>Decision\Conditions</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\RangeDistanceCondition.cpp">
-      <Filter>Decision\Conditions</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\RecentlyHitCondition.cpp">
       <Filter>Decision\Conditions</Filter>
     </ClCompile>
@@ -230,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Enemy.cpp">
       <Filter>Decision\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TooCloseCondition.cpp">
+      <Filter>Decision\Conditions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -464,9 +464,6 @@
     <ClInclude Include="..\src\AttackRangeCondition.h">
       <Filter>Decision\Conditions</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\RangeDistanceCondition.h">
-      <Filter>Decision\Conditions</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\RecentlyHitCondition.h">
       <Filter>Decision\Conditions</Filter>
     </ClInclude>
@@ -478,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Enemy.h">
       <Filter>Decision\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TooCloseCondition.h">
+      <Filter>Decision\Conditions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
