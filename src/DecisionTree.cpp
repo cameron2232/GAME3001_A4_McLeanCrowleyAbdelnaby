@@ -103,7 +103,7 @@ std::string DecisionTree::MakeDecision()
 	}
 	
 	setCurrentNode(currentNode);
-	std::cout << currentNode->name << std::endl;
+	//std::cout << currentNode->name << std::endl;
 	return currentNode->name;
 
 	

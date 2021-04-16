@@ -11,4 +11,5 @@ FleeAction::~FleeAction() = default;
 void FleeAction::Action(Agent * m_agent)
 {
 	std::cout << "Performing Flee Action" << std::endl;
+	m_agent->flee();
 }

@@ -20,6 +20,8 @@ public:
 	void clean() override = 0;
 
 	virtual void move();
+	virtual void rotate();
+	virtual void flee();
 
 	// getters
 	glm::vec2 getTargetPosition() const;

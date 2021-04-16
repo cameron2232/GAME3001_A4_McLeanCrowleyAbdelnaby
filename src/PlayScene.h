@@ -59,6 +59,7 @@ private:
 	void m_CheckEnemyHealth(Enemy* enemy);
 	void m_CheckCloseCombatRange(Enemy* enemy);
 	void m_CheckEnemyFireDetection(Enemy* enemy);
+	void m_CheckNodeLOS(Node* node);
 	void m_CheckBehindCover(Enemy* enemy);
 	void m_CheckTooClose(Enemy* enemy);
 	
