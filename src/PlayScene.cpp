@@ -742,6 +742,8 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 	}
 	else if (decisionTree->getCurrentNode()->name == "Move To Player Action")
 	{
+		decisionTree->setCurrentAction(new MoveToPlayerAction());
+		decisionTree->getCurrentAction()->Action(m_agent);
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
 	else if (/*decisionTree->getCurrentNode()->name == "Ranged Attack Action" =*/ m_agent->hasLOS() && m_agent->getisInFireDistance())
@@ -960,6 +962,18 @@ void PlayScene::m_setPatrolMode(bool state)
 bool PlayScene::m_getPatrolMode() const
 {
 	return m_isPatrolling;
+}
+
+void PlayScene::m_CheckEnemyHealth(Enemy* enemy)
+{
+	if(enemy->getHealth() == 1)
+	{
+		enemy->setHealthState(true);
+	}
+	else
+	{
+		enemy->setHealthState(false);
+	}
 }
 
 void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)

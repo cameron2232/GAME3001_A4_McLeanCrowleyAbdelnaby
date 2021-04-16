@@ -54,6 +54,7 @@ private:
 	bool m_getDebugMode() const;
 	void m_setPatrolMode(bool state);
 	bool m_getPatrolMode() const;
+	void m_CheckEnemyHealth(Enemy* enemy);
 	void m_CheckEnemyFireDetection(Enemy* enemy);
 	int cooldown = 20;
 	DecisionTree* decisionTree;

@@ -30,6 +30,16 @@ void DecisionTree::setCurrentNode(TreeNode* node)
 	m_currentNode = node;
 }
 
+ActionNode* DecisionTree::getCurrentAction() const
+{
+	return m_CurrentAction;
+}
+
+void DecisionTree::setCurrentAction(ActionNode* node)
+{
+	m_CurrentAction = node;
+}
+
 TreeNode* DecisionTree::AddNode(TreeNode * parent, TreeNode * child_node, const TreeNodeType type)
 {
 	switch (type)
@@ -61,7 +71,7 @@ void DecisionTree::Update()
 
 	m_RadiusNode->setIsWithinRadius(m_agent->hasDetection());
 
-	m_HealthNode->setHealthCondition(m_agent->getHealth());
+	m_HealthNode->setHealthCondition(m_agent->getHealthState());
 
 	if(m_agent->getAgentType() == RANGED_ENEMY)
 	{
@@ -75,18 +85,6 @@ void DecisionTree::Update()
 	}
 	else if(m_agent->getAgentType() == CLOSE_COMBAT_ENEMY)
 		m_CloseCombatNode->setIsWithinCombatRange(m_agent->getCloseCombat());
-
-
-	/*if(getCurrentNode() == m_treeNodeList[3])
-	{
-		m_CurrentAction = new PatrolAction;
-		m_CurrentAction->Action(getAgent());
-	}
-	if (getCurrentNode() == m_treeNodeList[4])
-	{
-		m_CurrentAction = new MoveToPlayerAction;
-		m_CurrentAction->Action(getAgent());
-	}*/
 	
 }
 
@@ -103,10 +101,12 @@ std::string DecisionTree::MakeDecision()
 	{
 		currentNode = (currentNode->data) ? (currentNode->Right) : (currentNode->Left);
 	}
-
+	
 	setCurrentNode(currentNode);
 	std::cout << currentNode->name << std::endl;
 	return currentNode->name;
+
+	
 }
 
 void DecisionTree::m_buildTree()
