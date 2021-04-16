@@ -28,6 +28,10 @@ REnemy::REnemy()
 	m_turnRate = 5.0f; // 5 degrees per frame
 	m_accelerationRate = 1.0f;
 	m_maxSpeed = 3.0f;
+
+	setFireDistance(getLOSDistance());
+	setIsInFireDetection(false);
+	setFireDetectionColour(glm::vec4(1, 0, 0, 1));
 	
 	setLOSDistance(400.0f); // 5 ppf x 80 feet
 	setLOSColour(glm::vec4(1, 0, 0, 1));
