@@ -9,10 +9,10 @@
 CCEnemy::CCEnemy()
 {
 	m_maxSpeed = 10.0f;
-	TextureManager::Instance()->loadSpriteSheet("../Assets/sprites/EnemyGuard.txt", "../Assets/sprites/EnemyGuard.png", "GuardSheet");
+	TextureManager::Instance()->loadSpriteSheet("../Assets/sprites/CCEnemyGuard.txt", "../Assets/sprites/CCEnemyGuard.png", "CCGuardSheet");
 
 	//	auto size = TextureManager::Instance()->getTextureSize("ship");
-	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("GuardSheet"));
+	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("CCGuardSheet"));
 
 	setWidth(25);
 	setHeight(40);
@@ -40,7 +40,7 @@ CCEnemy::CCEnemy()
 	setAnimationState(ENEMY_IDLE);
 	setAgentType(CLOSE_COMBAT_ENEMY);
 
-	Hitbox = new SDL_FRect({ getTransform()->position.x, getTransform()->position.y, 64.0f, 64.0f });
+	
 
 	m_buildAnimations();
 }
@@ -58,21 +58,21 @@ void CCEnemy::draw()
 	// draw the ship
 	switch (m_currentAnimationState)
 	{
-	case ENEMY_IDLE:
-		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("idle"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
+	case CCENEMY_IDLE:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("idle"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
 		break;
 
-	case ENEMY_RUN:
-		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("run"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
+	case CCENEMY_RUN:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("run"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
 		break;
 
-	case ENEMY_DAMAGE:
-		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("damage"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
+	case CCENEMY_ATTACK:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("damage"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
 		break;
 
-	case ENEMY_DEATH:
-		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("death"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
-		break;
+	/*case ENEMY_DEATH:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("death"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
+		break;*/
 	}
 
 	// draw LOS
@@ -105,43 +105,49 @@ void CCEnemy::clean()
 {
 }
 
+void CCEnemy::Attack()
+{
+	setAnimationState(CCENEMY_ATTACK);
+	Hitbox = new SDL_FRect({ getTransform()->position.x, getTransform()->position.y, 64.0f, 64.0f });
+	
+}
+
 void CCEnemy::m_buildAnimations()
 {
 	Animation idleAnimation = Animation();
 
 	idleAnimation.name = "idle";
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-1"));
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-2"));
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-3"));
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-4"));
+	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-idle-1"));
+	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-idle-2"));
 
 	setAnimation(idleAnimation);
 
 	Animation runAnimation = Animation();
 
 	runAnimation.name = "run";
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-1"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-2"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-3"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-4"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-5"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-6"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-7"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-8"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-1"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-2"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-3"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-4"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-5"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-6"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-7"));
+	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-walking-8"));
 
 	setAnimation(runAnimation);
 
-	Animation damageAnimation = Animation();
+	Animation attackAnimation = Animation();
 
-	damageAnimation.name = "damage";
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-1"));
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-2"));
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-3"));
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-4"));
+	attackAnimation.name = "attack";
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-1"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-2"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-3"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-4"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-5"));
 
-	setAnimation(damageAnimation);
+	setAnimation(attackAnimation);
 
-	Animation deathAnimation = Animation();
+	/*Animation deathAnimation = Animation();
 
 	deathAnimation.name = "death";
 	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-1"));
@@ -149,5 +155,5 @@ void CCEnemy::m_buildAnimations()
 	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-3"));
 	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-4"));
 
-	setAnimation(deathAnimation);
+	setAnimation(deathAnimation);*/
 }

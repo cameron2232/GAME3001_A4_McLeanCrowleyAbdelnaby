@@ -71,6 +71,7 @@ private:
 	int footstepCooldown = 60;
 	int pfootstep = 0;
 	int EnemyFireCoolDown = 20;
+	int CCEnemyAttackCoolDown = 5;
 
 };
 
