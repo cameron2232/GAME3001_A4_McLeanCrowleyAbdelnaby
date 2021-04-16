@@ -986,6 +986,18 @@ bool PlayScene::m_getPatrolMode() const
 	return m_isPatrolling;
 }
 
+void PlayScene::m_CheckEnemyHealth(Enemy* enemy)
+{
+	if(enemy->getHealth() == 1)
+	{
+		enemy->setHealthState(true);
+	}
+	else
+	{
+		enemy->setHealthState(false);
+	}
+}
+
 void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)
 {
 	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
