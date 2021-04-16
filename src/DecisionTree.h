@@ -35,6 +35,9 @@ public:
 	TreeNode* getCurrentNode() const;
 	void setCurrentNode(TreeNode* node);
 
+	ActionNode* getCurrentAction() const;
+	void setCurrentAction(ActionNode* node);
+
 	TreeNode* AddNode(TreeNode* parent, TreeNode* child_node, TreeNodeType type);
 	void Display();
 	void Update();
