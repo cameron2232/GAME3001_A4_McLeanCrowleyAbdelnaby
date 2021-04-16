@@ -58,6 +58,21 @@ void DecisionTree::Update()
 {
 	m_LOSNode->setLOS(m_agent->hasLOS());
 
+	m_RadiusNode->setIsWithinRadius(m_agent->hasDetection());
+
+	m_HealthNode->setHealthCondition(m_agent->getHealth());
+
+	m_BehindCoverNode->setBehindCover(m_agent->getBehindCoverState());
+
+	m_RecentlyHitNode->setRecentlyHit(m_agent->getHitState());
+
+	m_AttackRangeNode->setAttackRange(m_agent->getRangedAttackState());
+	
+	m_RangeDistanceNode->setRangeDistance(m_agent->getInRange());
+
+	m_CloseCombatNode->setIsWithinCombatRange(m_agent->getCloseCombat());
+
+
 	if(getCurrentNode() == m_treeNodeList[3])
 	{
 		m_CurrentAction = new PatrolAction;
@@ -144,7 +159,35 @@ void DecisionTree::m_buildTree()
 
 		break;
 	case CLOSE_COMBAT_ENEMY:
-		std::cout << "Bleh";
+		m_HealthNode = new HealthCondition(); //ROOT NODE
+		m_treeNodeList.push_back(m_HealthNode); //Node 0, Check if Health < 25%
+
+		m_LOSNode = new LOSCondition();
+		AddNode(m_HealthNode, m_LOSNode, LEFT_TREE_NODE); //HEALTH LEFT
+		m_treeNodeList.push_back(m_LOSNode); //Node 2, if Health > 25%, check LOS
+
+		TreeNode* fleeCNode = AddNode(m_HealthNode, new FleeAction, RIGHT_TREE_NODE); //HEALTH RIGHT
+		m_treeNodeList.push_back(fleeCNode); //Node 3, if Health < 25%, Flee
+
+		m_RadiusNode = new RadiusCondition();
+		AddNode(m_LOSNode, m_RadiusNode, LEFT_TREE_NODE); //LOS LEFT
+		m_treeNodeList.push_back(m_RadiusNode);//Node 4, Check Radius
+
+		m_CloseCombatNode = new CloseCombatCondition();
+		AddNode(m_LOSNode, m_CloseCombatNode, RIGHT_TREE_NODE); //LOS RIGHT
+		m_treeNodeList.push_back(m_CloseCombatNode); //Node 5, if LOS, check if in CC Range
+
+		TreeNode* patrolCNode = AddNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE); //RADIUS LEFT
+		m_treeNodeList.push_back(patrolCNode); //Node 6, if no DR, Patrol Action
+
+		TreeNode* moveToLOSCNode = AddNode(m_RadiusNode, new MoveToLOSAction, RIGHT_TREE_NODE); //RADIUS RIGHT
+		m_treeNodeList.push_back(moveToLOSCNode); //Node 7, if has DR, Move to LOS
+
+		TreeNode* moveToPlayerCNode = AddNode(m_CloseCombatNode, new MoveToPlayerAction, LEFT_TREE_NODE); //CLOSE COMBAT RANGE LEFT
+		m_treeNodeList.push_back(moveToPlayerCNode); //Node 8, if not in Attack Range, Move to Player
+
+		TreeNode* closeCombatAttack = AddNode(m_CloseCombatNode, new CloseCombatAction, RIGHT_TREE_NODE);
+		m_treeNodeList.push_back(closeCombatAttack);		
 		break;
 
 	case AGENT_PLAYER: //Do Nothing Here, stays empty

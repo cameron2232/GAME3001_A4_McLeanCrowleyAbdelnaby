@@ -38,6 +38,12 @@ public:
 	bool getYMoving() const;
 	AgentType getAgentType() const;
 	int getHealth();
+	bool getCloseCombat() const;
+	bool getHealthState() const;
+	bool getRangedAttackState() const;
+	bool getInRange() const;
+	bool getBehindCoverState() const;
+	bool getHitState() const;
 
 	// setters
 	void setTargetPosition(glm::vec2 newPosition);
@@ -57,6 +63,12 @@ public:
 	void setHealthPostion(glm::vec2 postion);
 	void drawHeath();
 	void setAgentType(AgentType type);
+	void setCloseCombat(bool state);
+	void setHealthState(bool state);
+	void setRangedAttackState(bool state);
+	void setBehindCoverState(bool state);
+	void setHitState(bool state);
+	void setInrange(bool state);
 
 
 	void setFireDistance(int distance);
@@ -75,6 +87,12 @@ private:
 	// LOS
 	float m_LOSDistance;
 	bool m_hasLOS;
+	bool m_CloseCombatRange;
+	bool m_HealthState;
+	bool m_RangedAttack;
+	bool m_inRangeDistance;
+	bool m_isBehindCover;
+	bool m_isRecentlyHit;
 	glm::vec4 m_LOSColour;
 
 	//Detection Radius

@@ -71,13 +71,70 @@ int Agent::getHealth()
 	return m_agentHealth->getHealthCount();
 }
 
+bool Agent::getCloseCombat() const
+{
+	return m_CloseCombatRange;
+}
+
+bool Agent::getHealthState() const
+{
+	return m_HealthState;
+}
+
+bool Agent::getRangedAttackState() const
+{
+	return m_RangedAttack;
+}
+
+bool Agent::getInRange() const
+{
+	return m_inRangeDistance;
+}
+
+void Agent::setInrange(bool state)
+{
+	m_inRangeDistance = state;
+}
+
+bool Agent::getBehindCoverState() const
+{
+	return m_isBehindCover;
+}
+
+bool Agent::getHitState() const
+{
+	return m_isRecentlyHit;
+}
+
+void Agent::setCloseCombat(bool state)
+{
+	m_CloseCombatRange = state;
+}
+
+void Agent::setHealthState(bool state)
+{
+	m_HealthState = state;
+}
+
+void Agent::setRangedAttackState(bool state)
+{
+	m_RangedAttack = state;
+}
+
+void Agent::setBehindCoverState(bool state)
+{
+	m_isBehindCover = state;
+}
+
+void Agent::setHitState(bool state)
+{
+	m_isRecentlyHit = state;
+}
+
 void Agent::setHealthPostion(glm::vec2 postion)
 {
 	m_agentHealth->getTransform()->position = postion;
 }
-
-
-
 
 void Agent::drawHeath()
 {
