@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __ENEMY__
-#define __ENEMY__
+#ifndef __R_ENEMY__
+#define __R_ENEMY__
 
 #include "Agent.h"
 #include "TextureManager.h"
@@ -9,11 +9,11 @@
 
 #include "Sprite.h"
 
-class Enemy final : public Agent
+class REnemy final : public Agent
 {
 public:
-	Enemy();
-	~Enemy();
+	REnemy();
+	~REnemy();
 
 	// Inherited via Agent
 	void draw() override;
@@ -40,6 +40,7 @@ public:
 	Animation& getAnimation(const std::string& name);
 	void setSpriteSheet(SpriteSheet* sprite_sheet);
 	void setAnimation(const Animation& animation);
+	void Attack();
 
 private:
 	void m_checkBounds();
@@ -48,7 +49,7 @@ private:
 	//Animations
 	void m_buildAnimations();
 	bool m_animationsExists(const std::string& id);
-	SpriteSheet* m_EnemyAnimation;
+	SpriteSheet* m_REnemyAnimation;
 	PlayerAnimationState m_currentAnimationState;
 	std::unordered_map<std::string, Animation> m_pAnimations;
 
@@ -58,7 +59,9 @@ private:
 	glm::vec2 m_targetDirection;
 	float m_magnitudeDistance;
 	float m_accelerationRate;
+
+	SDL_Rect* Hitbox;
 };
 
 
-#endif /* defined (__ENEMY__) */
+#endif /* defined (__R_ENEMY__) */

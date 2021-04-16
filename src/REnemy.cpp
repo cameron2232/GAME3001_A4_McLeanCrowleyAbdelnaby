@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "REnemy.h"
 
 #include "Game.h"
 #include "glm/gtx/string_cast.hpp"
@@ -6,7 +6,7 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-Enemy::Enemy() : m_maxSpeed(10.0f), m_currentAnimationState(ENEMY_IDLE)
+REnemy::REnemy() : m_maxSpeed(10.0f), m_currentAnimationState(ENEMY_IDLE)
 {
 	TextureManager::Instance()->loadSpriteSheet("../Assets/sprites/EnemyGuard.txt", "../Assets/sprites/EnemyGuard.png", "GuardSheet");
 
@@ -37,15 +37,15 @@ Enemy::Enemy() : m_maxSpeed(10.0f), m_currentAnimationState(ENEMY_IDLE)
 	setHealth(3);
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
 	setAnimationState(ENEMY_IDLE);
-
+	Hitbox = new SDL_Rect({getTransform()->position.x, getTransform()->position.y, 64, 64 });
 	m_buildAnimations();
 }
 
 
-Enemy::~Enemy()
+REnemy::~REnemy()
 = default;
 
-void Enemy::draw()
+void REnemy::draw()
 {
 	// alias for x and y
 	const auto x = getTransform()->position.x;
@@ -85,7 +85,7 @@ void Enemy::draw()
 }
 
 
-void Enemy::update()
+void REnemy::update()
 {
 	//move();
 	m_checkBounds();
@@ -94,11 +94,11 @@ void Enemy::update()
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
 }
 
-void Enemy::clean()
+void REnemy::clean()
 {
 }
 
-void Enemy::turnRight()
+void REnemy::turnRight()
 {
 	setCurrentHeading(getCurrentHeading() + m_turnRate);
 	if (getCurrentHeading() >= 360)
@@ -107,7 +107,7 @@ void Enemy::turnRight()
 	}
 }
 
-void Enemy::turnLeft()
+void REnemy::turnLeft()
 {
 	setCurrentHeading(getCurrentHeading() - m_turnRate);
 	if (getCurrentHeading() < 0)
@@ -116,17 +116,17 @@ void Enemy::turnLeft()
 	}
 }
 
-void Enemy::moveForward()
+void REnemy::moveForward()
 {
 	getRigidBody()->velocity = getCurrentDirection() * m_maxSpeed;
 }
 
-void Enemy::moveBack()
+void REnemy::moveBack()
 {
 	getRigidBody()->velocity = getCurrentDirection() * -m_maxSpeed;
 }
 
-void Enemy::move()
+void REnemy::move()
 {
 	//getTransform()->position += getRigidBody()->velocity;
 	//getRigidBody()->velocity *= 0.9f;
@@ -166,7 +166,7 @@ void Enemy::move()
 	getTransform()->position += getRigidBody()->velocity;
 }
 
-float Enemy::getTargetDistance() const
+float REnemy::getTargetDistance() const
 {
 	return m_magnitudeDistance;
 }
@@ -174,37 +174,37 @@ float Enemy::getTargetDistance() const
 
 
 
-float Enemy::getMaxSpeed() const
+float REnemy::getMaxSpeed() const
 {
 	return m_maxSpeed;
 }
 
-void Enemy::setMaxSpeed(const float newSpeed)
+void REnemy::setMaxSpeed(const float newSpeed)
 {
 	m_maxSpeed = newSpeed;
 }
 
-void Enemy::setAnimationState(PlayerAnimationState new_state)
+void REnemy::setAnimationState(PlayerAnimationState new_state)
 {
 	m_currentAnimationState = new_state;
 }
 
-PlayerAnimationState Enemy::getAnimationState()
+PlayerAnimationState REnemy::getAnimationState()
 {
 	return m_currentAnimationState;
 }
 
-Animation& Enemy::getAnimation(const std::string& name)
+Animation& REnemy::getAnimation(const std::string& name)
 {
 	return m_pAnimations[name];
 }
 
-void Enemy::setSpriteSheet(SpriteSheet* sprite_sheet)
+void REnemy::setSpriteSheet(SpriteSheet* sprite_sheet)
 {
-	m_EnemyAnimation = sprite_sheet;
+	m_REnemyAnimation = sprite_sheet;
 }
 
-void Enemy::setAnimation(const Animation& animation)
+void REnemy::setAnimation(const Animation& animation)
 {
 	if (!m_animationsExists(animation.name))
 	{
@@ -212,59 +212,64 @@ void Enemy::setAnimation(const Animation& animation)
 	}
 }
 
-void Enemy::m_buildAnimations()
+void REnemy::Attack()
+{
+	
+}
+
+void REnemy::m_buildAnimations()
 {
 	Animation idleAnimation = Animation();
 
 	idleAnimation.name = "idle";
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-1"));
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-2"));
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-3"));
-	idleAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-idle-4"));
+	idleAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-idle-1"));
+	idleAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-idle-2"));
+	idleAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-idle-3"));
+	idleAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-idle-4"));
 
 	setAnimation(idleAnimation);
 	
 	Animation runAnimation = Animation();
 
 	runAnimation.name = "run";
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-1"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-2"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-3"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-4"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-5"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-6"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-7"));
-	runAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-walking-8"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-1"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-2"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-3"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-4"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-5"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-6"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-7"));
+	runAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-walking-8"));
 
 	setAnimation(runAnimation);
 
 	Animation damageAnimation = Animation();
 
 	damageAnimation.name = "damage";
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-1"));
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-2"));
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-3"));
-	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-damage-4"));
+	damageAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-damage-1"));
+	damageAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-damage-2"));
+	damageAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-damage-3"));
+	damageAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-damage-4"));
 
 	setAnimation(damageAnimation);
 
 	Animation deathAnimation = Animation();
 
 	deathAnimation.name = "death";
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-1"));
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-2"));
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-3"));
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-4"));
+	deathAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-death-1"));
+	deathAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-death-2"));
+	deathAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-death-3"));
+	deathAnimation.frames.push_back(m_REnemyAnimation->getFrame("guard-death-4"));
 
 	setAnimation(deathAnimation);
 }
 
-bool Enemy::m_animationsExists(const std::string& id)
+bool REnemy::m_animationsExists(const std::string& id)
 {
 	return m_pAnimations.find(id) != m_pAnimations.end();
 }
 
-void Enemy::m_checkBounds()
+void REnemy::m_checkBounds()
 {
 
 	if (getTransform()->position.x + getWidth() > Config::SCREEN_WIDTH)
@@ -289,7 +294,7 @@ void Enemy::m_checkBounds()
 
 }
 
-void Enemy::m_reset()
+void REnemy::m_reset()
 {
 	getRigidBody()->isColliding = false;
 	const int halfWidth = getWidth() * 0.5f;
