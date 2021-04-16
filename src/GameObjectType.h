@@ -6,6 +6,8 @@ enum GameObjectType {
 	SPACE_SHIP,
 	OBSTACLE,
 	SHIP,
+	RENEMY,
+	CCENEMY,
 	TARGET,
 	PLAYER,
 	PLANE,
