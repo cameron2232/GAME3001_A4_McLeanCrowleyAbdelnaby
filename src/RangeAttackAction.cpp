@@ -3,7 +3,7 @@
 
 RangeAttackAction::RangeAttackAction()
 {
-	name = "Attack Action";
+	name = "Ranged Attack Action";
 }
 
 RangeAttackAction::~RangeAttackAction()

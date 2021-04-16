@@ -69,10 +69,39 @@ void Enemy::rotate()
 	}
 }
 
+void Enemy::flee()
+{
+	auto deltaTime = TheGame::Instance()->getDeltaTime();
+
+	m_targetDirection = getTransform()->position - getTargetPosition();
+
+	m_targetDirection = Util::normalize(m_targetDirection);
+
+	auto target_rotation = Util::signedAngle(getCurrentDirection(), m_targetDirection);
+
+	auto turn_sensitivity = 5.0f;
+
+	if (abs(target_rotation) > turn_sensitivity)
+	{
+		if (target_rotation > 0.0f)
+		{
+			setCurrentHeading(getCurrentHeading() + m_turnRate);
+		}
+		else if (target_rotation < 0.0f)
+		{
+			setCurrentHeading(getCurrentHeading() - m_turnRate);
+		}
+	}
+
+
+	getRigidBody()->acceleration = getCurrentDirection() * m_accelerationRate;
+	getRigidBody()->velocity += getCurrentDirection() * (deltaTime)+0.5f * getRigidBody()->acceleration * (deltaTime);
+	getRigidBody()->velocity = Util::clamp(getRigidBody()->velocity, m_maxSpeed);
+	getTransform()->position += getRigidBody()->velocity;
+}
+
 void Enemy::move()
 {
-	//getTransform()->position += getRigidBody()->velocity;
-	//getRigidBody()->velocity *= 0.9f;
 	auto deltaTime = TheGame::Instance()->getDeltaTime();
 
 	m_targetDirection = getTargetPosition() - getTransform()->position;

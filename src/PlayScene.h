@@ -34,6 +34,7 @@ public:
 
 private:
 	void m_DecisionMaking(Enemy* m_agent);
+	void m_CheckEnemyBehindCover(Enemy* enemy);
 	// IMGUI Function
 	void GUI_Function();
 	std::string m_guiTitle;
