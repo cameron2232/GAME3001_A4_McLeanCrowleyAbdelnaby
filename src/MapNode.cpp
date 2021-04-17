@@ -35,16 +35,6 @@ void Node::clean()
 
 void Node::setHasLOS(bool state)
 {
-	m_hasLos = state;
-}
-
-bool Node::getHasLOS()
-{
-	return m_hasLos;
-}
-
-void Node::setHasLOS(bool state)
-{
 	m_hasLOS = state;
 }
 

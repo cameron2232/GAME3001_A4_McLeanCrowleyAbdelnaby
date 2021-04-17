@@ -760,21 +760,21 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 	{
 		return;
 	}
-	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Patrol Action")
+	if (m_agent->getDecisionTree()->getCurrentNode()->name == "Patrol Action")
 	{
 		m_agent->getDecisionTree()->setCurrentAction(new PatrolAction());
 		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 	}
 	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Player Action")
 	{
-		decisionTree->setCurrentAction(new MoveToPlayerAction());
-		decisionTree->getCurrentAction()->Action(m_agent);
+		m_agent->getDecisionTree()->setCurrentAction(new MoveToPlayerAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
 	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Ranged Attack Action")
 	{
-		decisionTree->setCurrentAction(new RangeAttackAction());
-		decisionTree->getCurrentAction()->Action(m_agent);
+		m_agent->getDecisionTree()->setCurrentAction(new RangeAttackAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 		if (EnemyFireCoolDown <= -20)
 		{
 			m_pEnemyBullets.push_back(new Bullet(m_agent->getTransform()->position.x + m_agent->getWidth() / 2, m_agent->getTransform()->position.y + m_agent->getHeight() / 2, m_agent->getCurrentHeading()));
@@ -784,15 +784,30 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 	}
 	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
 	{
-		decisionTree->setCurrentAction(new MoveToLOSAction());
-		decisionTree->getCurrentAction()->Action(m_agent);
+		m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
 	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Flee Action")
 	{
-		decisionTree->setCurrentAction(new FleeAction());
-		decisionTree->getCurrentAction()->Action(m_agent);
+		m_agent->getDecisionTree()->setCurrentAction(new FleeAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
+	}
+	else if(m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action")
+	{
+		m_agent->getDecisionTree()->setCurrentAction(new MoveToRangeAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+	}
+	else if(m_agent->getDecisionTree()->getCurrentNode()->name == "Move Behind Cover Action")
+	{
+		m_agent->getDecisionTree()->setCurrentAction(new MoveBehindCoverAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+	}
+	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Wait Behind Cover Action")
+	{
+		m_agent->getDecisionTree()->setCurrentAction(new WaitBehindCoverAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 	}
 }
 
@@ -1074,26 +1089,6 @@ void PlayScene::m_CheckTooClose(Enemy* enemy)
 	else
 	{
 		enemy->setInrange(false);
-	}
-}
-
-void PlayScene::m_CheckNodeLOS(Node* node)
-{
-	for (auto obj : getDisplayList())
-	{
-		if (obj->getType() == OBSTACLE)
-		{
-			if (CollisionManager::lineRectCheck(node->getTransform()->position, m_pShip->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
-			{
-				node->setHasLOS(false);
-				return;
-			}
-			else
-			{
-				node->setHasLOS(true);
-
-			}
-		}
 	}
 }
 

@@ -62,9 +62,7 @@ private:
 	void m_CheckNodeLOS(Node* node);
 	void m_CheckBehindCover(Enemy* enemy);
 	void m_CheckTooClose(Enemy* enemy);
-	
 
-	void m_CheckNodeLOS(Node* node);
 	int cooldown = 20;
 	//DecisionTree* decisionTree;
 	const float m_playerSpeed = 5.0f;
