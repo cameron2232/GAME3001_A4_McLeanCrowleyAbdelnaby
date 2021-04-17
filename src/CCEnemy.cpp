@@ -14,8 +14,8 @@ CCEnemy::CCEnemy()
 	//	auto size = TextureManager::Instance()->getTextureSize("ship");
 	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("CCGuardSheet"));
 
-	setWidth(25);
-	setHeight(40);
+	setWidth(30);
+	setHeight(50);
 
 	getTransform()->position = glm::vec2(400.0f, 300.0f);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -61,16 +61,16 @@ void CCEnemy::draw()
 	// draw the ship
 	switch (m_currentAnimationState)
 	{
-	case CCENEMY_IDLE:
-		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("idle"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
+	case ENEMY_IDLE:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("idle"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
-	case CCENEMY_RUN:
-		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("run"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
+	case ENEMY_RUN:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("run"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
 	case CCENEMY_ATTACK:
-		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("damage"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("damage"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
 	/*case ENEMY_DEATH:

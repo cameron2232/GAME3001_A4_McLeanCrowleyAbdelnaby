@@ -143,7 +143,15 @@ float Enemy::getTargetDistance() const
 	return m_magnitudeDistance;
 }
 
+bool Enemy::getHasDetected() const
+{
+	return hasDetected;
+}
 
+void Enemy::setHasDetected(bool state)
+{
+	hasDetected = state;
+}
 
 
 float Enemy::getMaxSpeed() const
@@ -182,6 +190,32 @@ void Enemy::setAnimation(const Animation & animation)
 	{
 		m_pAnimations[animation.name] = animation;
 	}
+}
+
+void Enemy::setPatrol(int s, int e)
+{
+	patrolStart = patrolCurrent = s;
+	patrolEnd = e;
+}
+
+void Enemy::setPatrolCurrent(int c)
+{
+	patrolCurrent = c;
+}
+
+int Enemy::getPatrolS()
+{
+	return patrolStart;
+}
+
+int Enemy::getPatrolE()
+{
+	return patrolEnd;
+}
+
+int Enemy::getPatrolCurrent()
+{
+	return patrolCurrent;
 }
 
 bool Enemy::m_animationsExists(const std::string & id)
@@ -226,6 +260,11 @@ void Enemy::m_reset()
 	const auto xComponent = rand() % (640 - getWidth()) + halfWidth + 1;
 	const auto yComponent = -getHeight();
 	getTransform()->position = glm::vec2(xComponent, yComponent);
+}
+
+void Enemy::Attack()
+{
+	
 }
 
 

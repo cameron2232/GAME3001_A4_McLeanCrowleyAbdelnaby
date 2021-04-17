@@ -21,7 +21,7 @@ public:
 	void draw() override;
 	void update() override;
 	void clean() override;
-	void Attack();
+	void Attack() override;
 
 private:
 	void m_buildAnimations() override;
