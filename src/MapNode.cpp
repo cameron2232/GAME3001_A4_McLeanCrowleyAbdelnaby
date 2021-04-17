@@ -32,3 +32,14 @@ void Node::update()
 void Node::clean()
 {
 }
+
+void Node::setHasLOS(bool state)
+{
+	m_hasLOS = state;
+}
+
+bool Node::getHasLOS()
+{
+	return m_hasLOS;
+}
+
