@@ -40,7 +40,10 @@ CCEnemy::CCEnemy()
 	setAnimationState(ENEMY_IDLE);
 	setAgentType(CLOSE_COMBAT_ENEMY);
 
-	
+	setFireDistance(50.0f); //Can fire in this range
+	setIsInFireDetection(false);
+
+	deathCooldown = 60;
 
 	decisionTree = new DecisionTree();
 	decisionTree->setAgent(this);
