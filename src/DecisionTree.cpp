@@ -67,25 +67,28 @@ void DecisionTree::Display()
 
 void DecisionTree::Update()
 {
-	m_LOSNode->setLOS(m_agent->hasLOS());
-
-	m_RadiusNode->setIsWithinRadius(m_agent->hasDetection());
-
-	m_HealthNode->setHealthCondition(m_agent->getHealthState());
-
-	if(m_agent->getAgentType() == RANGED_ENEMY)
+	if (m_agent != nullptr)
 	{
-		m_BehindCoverNode->setBehindCover(m_agent->getBehindCoverState());
+		m_LOSNode->setLOS(m_agent->hasLOS());
 
-		m_RecentlyHitNode->setRecentlyHit(m_agent->getHitState());
+		m_RadiusNode->setIsWithinRadius(m_agent->hasDetection());
 
-		m_AttackRangeNode->setAttackRange(m_agent->getRangedAttackState());
+		m_HealthNode->setHealthCondition(m_agent->getHealthState());
 
-		m_RangeDistanceNode->setRangeDistance(m_agent->getInRange());
+		if (m_agent->getAgentType() == RANGED_ENEMY)
+		{
+			m_BehindCoverNode->setBehindCover(m_agent->getBehindCoverState());
+
+			m_RecentlyHitNode->setRecentlyHit(m_agent->getHitState());
+
+			m_AttackRangeNode->setAttackRange(m_agent->getRangedAttackState());
+
+			m_RangeDistanceNode->setRangeDistance(m_agent->getInRange());
+		}
+		else if (m_agent->getAgentType() == CLOSE_COMBAT_ENEMY)
+			m_CloseCombatNode->setIsWithinCombatRange(m_agent->getCloseCombat());
+
 	}
-	else if(m_agent->getAgentType() == CLOSE_COMBAT_ENEMY)
-		m_CloseCombatNode->setIsWithinCombatRange(m_agent->getCloseCombat());
-	
 }
 
 // In-order Traversal

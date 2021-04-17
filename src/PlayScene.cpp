@@ -390,7 +390,7 @@ void PlayScene::start()
 	m_guiTitle = "Play Scene";
 
 	TextureManager::Instance()->load("../Assets/textures/BackgroundFramework_1.png", "Background");
-	const SDL_Color colour = { 0, 255, 0, 255 };
+	const SDL_Color colour = { 255, 0, 0, 255 };
 	m_UIScore = new Label("--", "Consolas", 20, colour, glm::vec2(625.0f, 15.0f));
 	m_UIScore->setParent(this);
 	addChild(m_UIScore);
@@ -399,13 +399,13 @@ void PlayScene::start()
 
 
 
-	instructions = new Label("--", "Consolas", 15, colour, glm::vec2(550.0f, 585.0f));
+	instructions = new Label("--", "Consolas", 20, colour, glm::vec2(550.0f, 585.0f));
 	instructions->setParent(this);
 	addChild(instructions);
 
 	std::stringstream stream;
 
-	stream << "(P - Enemy patrol)" << " (H - Debug view)"<< " (W,A,S,D - Moves player)";
+	stream <<" (H - Debug view)"<< " (W,A,S,D - Moves player)";
 	const std::string Score_string = stream.str();
 	instructions->setText(Score_string);
 
@@ -502,7 +502,6 @@ void PlayScene::start()
 	m_pNode.push_back(new Node(660, 20));
 	m_pNode.push_back(new Node(720, 20));
 	m_pNode.push_back(new Node(760, 20));
-	m_pNode.push_back(new Node(760, 120));
 	m_pNode.push_back(new Node(760, 70));
 	m_pNode.push_back(new Node(760, 120));
 	m_pNode.push_back(new Node(480, 120));
@@ -513,6 +512,53 @@ void PlayScene::start()
 	m_pNode.push_back(new Node(480, 70));
 
 
+	//Extra nodes Down the center
+	m_pNode.push_back(new Node(420, 20));
+	m_pNode.push_back(new Node(420, 80));
+	m_pNode.push_back(new Node(420, 140));
+	m_pNode.push_back(new Node(420, 200));
+	m_pNode.push_back(new Node(420, 260));
+	m_pNode.push_back(new Node(420, 320));
+	m_pNode.push_back(new Node(420, 380));
+	m_pNode.push_back(new Node(420, 440));
+	m_pNode.push_back(new Node(420, 500));
+	m_pNode.push_back(new Node(420, 560));
+
+	//extra nodes
+	m_pNode.push_back(new Node(365, 440));
+	m_pNode.push_back(new Node(365, 500));
+	m_pNode.push_back(new Node(365, 560));
+
+	m_pNode.push_back(new Node(500, 560));
+	m_pNode.push_back(new Node(560, 560));
+	m_pNode.push_back(new Node(620, 560));
+	m_pNode.push_back(new Node(680, 560));
+	m_pNode.push_back(new Node(740, 560));
+
+	m_pNode.push_back(new Node(480, 180));
+	m_pNode.push_back(new Node(540, 180));
+	m_pNode.push_back(new Node(600, 180));
+	m_pNode.push_back(new Node(660, 180));
+	m_pNode.push_back(new Node(720, 180));
+	m_pNode.push_back(new Node(760, 180));
+
+	m_pNode.push_back(new Node(460, 260));
+	m_pNode.push_back(new Node(460, 320));
+	m_pNode.push_back(new Node(460, 380));
+	m_pNode.push_back(new Node(460, 440));
+	m_pNode.push_back(new Node(460, 500));
+	m_pNode.push_back(new Node(460, 560));
+
+	m_pNode.push_back(new Node(23, 534));
+	m_pNode.push_back(new Node(63, 534));
+	m_pNode.push_back(new Node(103, 534));
+	m_pNode.push_back(new Node(143, 534));
+
+	m_pNode.push_back(new Node(23, 574));
+	m_pNode.push_back(new Node(63, 574));
+	m_pNode.push_back(new Node(103, 574));
+	m_pNode.push_back(new Node(143, 574));
+
 	for(int i = 0; i < m_pNode.size(); i++)
 	{
 		m_pNode[i]->m_label->setText(std::to_string(i));
@@ -522,7 +568,6 @@ void PlayScene::start()
 		addChild(node);
 
 	m_pEnemy.push_back(new REnemy());
-	//m_pEnemy.push_back(new CCEnemy());
 	m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 	m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
 	m_pEnemy[0]->setPatrol(0, 19);
@@ -535,9 +580,6 @@ void PlayScene::start()
 	addChild(m_pEnemy[1]);
 
 	// Create Decision Tree
-	
-
-
 	m_meleeActtack = new MeleeAttack(m_pShip->getCurrentHeading());
 
 
@@ -760,6 +802,32 @@ void PlayScene::CollisionsUpdate()
 					m_pEnemyBullets.shrink_to_fit();
 					break;
 				}
+			}
+		}
+	}
+	for (int i = 0; i < m_pEnemy.size(); i++)
+	{
+		if (m_pEnemy[i] != nullptr)
+		{
+			if (m_pEnemy[i]->getTransform()->position.x >= 1000)
+			{
+				m_pEnemy[i]->setHealth(0);
+				break;
+			}
+			if (m_pEnemy[i]->getTransform()->position.x <= -200)
+			{
+				m_pEnemy[i]->setHealth(0);
+				break;
+			}
+			if (m_pEnemy[i]->getTransform()->position.y <= -200)
+			{
+				m_pEnemy[i]->setHealth(0);
+				break;
+			}
+			if (m_pEnemy[i]->getTransform()->position.y >= 800)
+			{
+				m_pEnemy[i]->setHealth(0);
+				break;
 			}
 		}
 	}
