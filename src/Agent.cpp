@@ -94,7 +94,6 @@ bool Agent::getInRange() const //bool for if too close
 void Agent::setInrange(bool state)
 {
 	m_inRangeDistance = state;
-	std::cout << m_inRangeDistance << std::endl;
 	m_minFireDistanceColour = (m_inRangeDistance) ? glm::vec4(0, 1, 0, 1) : glm::vec4(0, 0, 1, 1);
 }
 

@@ -65,14 +65,12 @@ void PlayScene::update()
 			m_DecisionMaking(m_pEnemy[i]);
 		}
 	}
-	for (int i = 0; i < m_pNode.size(); i++)
+
+	for(int i = 0; i < m_pNode.size(); i++)
 	{
 		m_CheckNodeLOS(m_pNode[i]);
-		//if (m_pNode[i]->getHasLOS())
-		//{
-		//	std::cout << m_pNode[i]->getTransform()->position.x <<", " << m_pNode[i]->getTransform()->position.y << std::endl;
-		//}
 	}
+
 	//m_DecisionMaking();
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
@@ -764,8 +762,8 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 	}
 	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Patrol Action")
 	{
-		decisionTree->setCurrentAction(new PatrolAction());
-		decisionTree->getCurrentAction()->Action(m_agent);
+		m_agent->getDecisionTree()->setCurrentAction(new PatrolAction());
+		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 	}
 	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Player Action")
 	{
@@ -1076,6 +1074,26 @@ void PlayScene::m_CheckTooClose(Enemy* enemy)
 	else
 	{
 		enemy->setInrange(false);
+	}
+}
+
+void PlayScene::m_CheckNodeLOS(Node* node)
+{
+	for (auto obj : getDisplayList())
+	{
+		if (obj->getType() == OBSTACLE)
+		{
+			if (CollisionManager::lineRectCheck(node->getTransform()->position, m_pShip->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
+			{
+				node->setHasLOS(false);
+				return;
+			}
+			else
+			{
+				node->setHasLOS(true);
+
+			}
+		}
 	}
 }
 

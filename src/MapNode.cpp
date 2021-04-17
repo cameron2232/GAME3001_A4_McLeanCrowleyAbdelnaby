@@ -42,3 +42,14 @@ bool Node::getHasLOS()
 {
 	return m_hasLos;
 }
+
+void Node::setHasLOS(bool state)
+{
+	m_hasLOS = state;
+}
+
+bool Node::getHasLOS()
+{
+	return m_hasLOS;
+}
+

@@ -15,10 +15,11 @@ public:
 	void draw() override;
 	void update() override;
 	void clean() override;
+
 	void setHasLOS(bool state);
 	bool getHasLOS();
-private:
-	bool m_hasLos;
+
+	bool m_hasLOS;
 };
 
 #endif 
