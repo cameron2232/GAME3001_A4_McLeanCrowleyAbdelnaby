@@ -1123,37 +1123,76 @@ void PlayScene::m_CheckEnemyDetection(Enemy* enemy)
 
 void PlayScene::m_CheckEnemyLOS(Enemy* enemy)
 {
-	bool collidingObstacle;
-	// if ship to target distance is less than or equal to LOS Distance
-	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
-	if (ShipToTargetDistance <= enemy->getLOSDistance())
-	{
-		std::vector<DisplayObject*> contactList;
-		for (auto object : getDisplayList())
-		{
-			if (object->getType() == NODE || object->getType() == NONE || object->getType() == BULLET)
-			{
-				continue;
-			}
-			collidingObstacle = (CollisionManager::lineRectCheck(glm::vec2(enemy->getTransform()->position.x + getWidth() / 2, enemy->getTransform()->position.y + getHeight() / 2),
-				(glm::vec2(enemy->getTransform()->position.x + getWidth() / 2, enemy->getTransform()->position.y + getHeight() / 2) + enemy->getCurrentDirection() * enemy->getLOSDistance()),
-				object->getTransform()->position, object->getWidth(), object->getHeight()));
-			// check if object is farther than than the target
-			auto ShipToObjectDistance = Util::distance(enemy->getTransform()->position, object->getTransform()->position);
+	//bool collidingObstacle;
+	//// if ship to target distance is less than or equal to LOS Distance
+	//auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
+	//if (ShipToTargetDistance <= enemy->getLOSDistance())
+	//{
+	//	std::vector<DisplayObject*> contactList;
+	//	for (auto object : getDisplayList())
+	//	{
+	//		if (object->getType() == NODE || object->getType() == NONE || object->getType() == BULLET)
+	//		{
+	//			continue;
+	//		}
+	//		collidingObstacle = (CollisionManager::lineRectCheck(glm::vec2(enemy->getTransform()->position.x + getWidth() / 2, enemy->getTransform()->position.y + getHeight() / 2),
+	//			(glm::vec2(enemy->getTransform()->position.x + getWidth() / 2, enemy->getTransform()->position.y + getHeight() / 2) + enemy->getCurrentDirection() * enemy->getLOSDistance()),
+	//			object->getTransform()->position, object->getWidth(), object->getHeight()));
+	//		// check if object is farther than than the target
+	//		auto ShipToObjectDistance = Util::distance(enemy->getTransform()->position, object->getTransform()->position);
 
-			if (ShipToObjectDistance <= ShipToTargetDistance && collidingObstacle)
+	//		if (ShipToObjectDistance <= ShipToTargetDistance && collidingObstacle)
+	//		{
+	//			if ((object->getType() != enemy->getType()) && (object->getType() != m_pShip->getType()))
+	//			{
+	//				contactList.push_back(object);
+	//			}
+	//		}
+	//	}
+	//	contactList.push_back(m_pShip); // add the target to the end of the list
+	//	auto hasLOS = CollisionManager::LOSCheck(enemy->getTransform()->position,
+	//		enemy->getTransform()->position + enemy->getCurrentDirection() * enemy->getLOSDistance(), contactList, m_pShip);
+	//	if (hasLOS)
+	//	{
+	//		for (auto obj : getDisplayList())
+	//		{
+	//			if (obj->getType() == NODE || obj->getType() == NONE || obj->getType() == BULLET)
+	//			{
+	//				continue;
+	//			}
+	//			if (CollisionManager::lineRectCheck(enemy->getTransform()->position, m_pShip->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
+	//			{
+	//				enemy->setHasLOS(hasLOS);
+	//				std::cout << "i see you";
+	//				return;
+	//			}
+	//			else
+	//			{
+	//				enemy->setHasLOS(false);
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		enemy->setHasLOS(hasLOS);
+	//	}
+
+	//}
+	for (auto obj : getDisplayList())
+	{
+		if (obj->getType() == OBSTACLE)
+		{
+			if (CollisionManager::lineRectCheck(enemy->getTransform()->position, m_pShip->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
 			{
-				if ((object->getType() != enemy->getType()) && (object->getType() != m_pShip->getType()))
-				{
-					contactList.push_back(object);
-				}
+				enemy->setHasLOS(false);
+				return;
+			}
+			else
+			{
+				//std::cout << "i see you";
+				enemy->setHasLOS(true);
 			}
 		}
-		contactList.push_back(m_pShip); // add the target to the end of the list
-		auto hasLOS = CollisionManager::LOSCheck(enemy->getTransform()->position,
-			enemy->getTransform()->position + enemy->getCurrentDirection() * enemy->getLOSDistance(), contactList, m_pShip);
-
-		enemy->setHasLOS(hasLOS);
 	}
 }
 
