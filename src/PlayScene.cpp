@@ -63,6 +63,8 @@ void PlayScene::update()
 		if (m_pEnemy[i] != nullptr)
 		{
 			m_DecisionMaking(m_pEnemy[i]);
+			if (m_pEnemy[i]->attackCooldown > 0)
+				m_pEnemy[i]->attackCooldown--;
 		}
 	}
 
@@ -461,9 +463,9 @@ void PlayScene::start()
 	m_pNode.push_back(new Node(103, 414));
 	m_pNode.push_back(new Node(63, 414));
 	m_pNode.push_back(new Node(23, 414));
-	m_pNode.push_back(new Node(103, 494));
-	m_pNode.push_back(new Node(63, 494));
 	m_pNode.push_back(new Node(23, 494));
+	m_pNode.push_back(new Node(63, 494));
+	m_pNode.push_back(new Node(103, 494));
 
 	m_pNode.push_back(new Node(200, 410));
 	m_pNode.push_back(new Node(250, 410));
@@ -485,14 +487,14 @@ void PlayScene::start()
 	m_pNode.push_back(new Node(750, 440));
 	m_pNode.push_back(new Node(750, 380));
 	m_pNode.push_back(new Node(750, 320));
-	m_pNode.push_back(new Node(750, 260));
-	m_pNode.push_back(new Node(700, 260));
-	m_pNode.push_back(new Node(640, 260));
-	m_pNode.push_back(new Node(560, 260));
-	m_pNode.push_back(new Node(500, 260));
-	m_pNode.push_back(new Node(500, 440));
-	m_pNode.push_back(new Node(500, 380));
+	m_pNode.push_back(new Node(750, 240));
+	m_pNode.push_back(new Node(700, 240));
+	m_pNode.push_back(new Node(640, 240));
+	m_pNode.push_back(new Node(560, 240));
+	m_pNode.push_back(new Node(500, 240));
 	m_pNode.push_back(new Node(500, 320));
+	m_pNode.push_back(new Node(500, 380));
+	m_pNode.push_back(new Node(500, 440));
 
 	m_pNode.push_back(new Node(480, 20));
 	m_pNode.push_back(new Node(540, 20));
@@ -511,7 +513,10 @@ void PlayScene::start()
 	m_pNode.push_back(new Node(480, 70));
 
 
-
+	for(int i = 0; i < m_pNode.size(); i++)
+	{
+		m_pNode[i]->m_label->setText(std::to_string(i));
+	}
 
 	for (auto node : m_pNode)
 		addChild(node);
@@ -524,9 +529,9 @@ void PlayScene::start()
 	addChild(m_pEnemy[0]);
 
 	m_pEnemy.push_back(new CCEnemy());
-	m_pEnemy[1]->getTransform()->position = glm::vec2(10.0f, 15.0f);
-	m_pEnemy[1]->setTargetPosition(m_pNode[1]->getTransform()->position);
-	m_pEnemy[1]->setPatrol(0, 19);
+	m_pEnemy[1]->getTransform()->position = m_pNode[40]->getTransform()->position;
+	m_pEnemy[1]->setTargetPosition(m_pNode[41]->getTransform()->position);
+	m_pEnemy[1]->setPatrol(40, 55);
 	addChild(m_pEnemy[1]);
 
 	// Create Decision Tree
@@ -786,7 +791,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			if(CollisionManager::AABBCheck(m_agent, m_pNode[m_agent->getPatrolCurrent()]))
 			{
-				if (m_agent->getPatrolS() == m_agent->getPatrolE())
+				if (m_agent->getPatrolCurrent() == m_agent->getPatrolE())
 					m_agent->setPatrol(m_agent->getPatrolS(), m_agent->getPatrolE());
 				else
 					m_agent->setPatrolCurrent(m_agent->getPatrolCurrent() + 1);
@@ -847,7 +852,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			if (CollisionManager::AABBCheck(m_agent, m_pNode[m_agent->getPatrolCurrent()]))
 			{
-				if (m_agent->getPatrolS() == m_agent->getPatrolE())
+				if (m_agent->getPatrolCurrent() == m_agent->getPatrolE())
 					m_agent->setPatrol(m_agent->getPatrolS(), m_agent->getPatrolE());
 				else
 					m_agent->setPatrolCurrent(m_agent->getPatrolCurrent() + 1);
@@ -879,6 +884,12 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->setCurrentAction(new CloseCombatAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			m_agent->Attack();
+			//SDL_FRect* shipRect = new SDL_FRect{ m_pShip->getTransform()->position.x,  m_pShip->getTransform()->position.y, m_pShip->getWidth(), m_pShip->getHeight() };
+			if((CollisionManager::AABBRectCheck(m_agent->getHitBox(), m_pShip) && m_agent->attackCooldown <= 0))
+			{
+				m_agent->attackCooldown = 80;
+				m_pShip->setHealth(m_pShip->getHealth() - 1);
+			}
 		}
 	}
 }

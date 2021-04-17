@@ -47,7 +47,7 @@ CCEnemy::CCEnemy()
 
 	decisionTree = new DecisionTree();
 	decisionTree->setAgent(this);
-
+	Hitbox = new SDL_FRect({ getTransform()->position.x, getTransform()->position.y, 64.0f, 64.0f });
 	m_buildAnimations();
 }
 
@@ -90,7 +90,7 @@ void CCEnemy::draw()
 		// draw detection radius
 		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getDetectionDistance(), getDetectionColor());
 
-
+		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), 50, getDetectionColor());
 	}
 
 	drawHeath();
@@ -104,6 +104,8 @@ void CCEnemy::update()
 	glm::vec2 m_targetDistance = glm::vec2(abs(getTransform()->position.x - getTargetPosition().x), abs(getTransform()->position.y - getTargetPosition().y));
 	float magnitudeDistance = sqrt((m_targetDistance.x * m_targetDistance.x) + (m_targetDistance.y * m_targetDistance.y));
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
+	Hitbox->x = getTransform()->position.x;
+	Hitbox->y = getTransform()->position.y;
 }
 
 void CCEnemy::clean()
@@ -112,9 +114,7 @@ void CCEnemy::clean()
 
 void CCEnemy::Attack()
 {
-	setAnimationState(CCENEMY_ATTACK);
-	Hitbox = new SDL_FRect({ getTransform()->position.x, getTransform()->position.y, 64.0f, 64.0f });
-	
+	setAnimationState(CCENEMY_ATTACK);	
 }
 
 void CCEnemy::m_buildAnimations()
