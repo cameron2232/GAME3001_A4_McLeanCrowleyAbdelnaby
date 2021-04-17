@@ -156,13 +156,13 @@ void PlayScene::update()
 	{
 		if (m_pEnemy[i]->getAnimationState() == ENEMY_DEATH)
 		{
-			deathCooldown--;
+			m_pEnemy[i]->deathCooldown--;
 		}
-		if(deathCooldown <= 0)
+		if(m_pEnemy[i]->deathCooldown <= 0)
 		{
 			m_enemysKilled++;
 			SoundManager::Instance().playSound("Death", 0, -1);
-			deathCooldown = 60;
+			m_pEnemy[i]->deathCooldown = 60;
 			removeChild(m_pEnemy[i]);
 			m_pEnemy[i] = nullptr;
 			m_pEnemy.erase(m_pEnemy.begin() + i);
@@ -877,6 +877,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Close Combat Action")
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new CloseCombatAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			m_agent->Attack();
 		}
 	}
@@ -1127,11 +1128,13 @@ void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)
 	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
 	if (ShipToTargetDistance <= enemy->getFireDistance())
 	{
+		enemy->setCloseCombat(true);
 		enemy->setIsInFireDetection(true);
 		enemy->setRangedAttackState(true);
 	}
 	else
 	{
+		enemy->setCloseCombat(false);
 		enemy->setIsInFireDetection(false);
 		enemy->setRangedAttackState(false);
 	}

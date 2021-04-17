@@ -73,6 +73,7 @@ public:
 	float m_accelerationRate;
 	bool hasDetected;
 
+	int deathCooldown;
 	int patrolStart, patrolEnd, patrolCurrent;
 
 	//Decision Tree

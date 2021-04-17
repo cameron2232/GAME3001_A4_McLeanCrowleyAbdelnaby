@@ -28,6 +28,7 @@ REnemy::REnemy()
 	m_turnRate = 5.0f; // 5 degrees per frame
 	m_accelerationRate = 1.0f;
 	m_maxSpeed = 3.0f;
+	deathCooldown = 60;
 
 	//setFireDistance(getLOSDistance());
 	//setIsInFireDetection(false);
