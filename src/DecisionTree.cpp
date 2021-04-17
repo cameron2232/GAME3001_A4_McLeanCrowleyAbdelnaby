@@ -128,33 +128,33 @@ void DecisionTree::m_buildTree()
 		TreeNode* fleeNode = AddNode(m_HealthNode, new FleeAction, RIGHT_TREE_NODE); //HEALTH NODE RIGHT
 		m_treeNodeList.push_back(fleeNode); //Node 2, if Health < 25%, Flee
 
-		m_LOSNode = new LOSCondition();
-		AddNode(m_RecentlyHitNode, m_LOSNode, LEFT_TREE_NODE); //RECENTLY HIT LEFT
-		m_treeNodeList.push_back(m_LOSNode); //Node 3, if not Recently Hit, Check if has LOS
+		m_RadiusNode = new RadiusCondition();
+		AddNode(m_RecentlyHitNode, m_RadiusNode, LEFT_TREE_NODE); //RECENTLY HIT LEFT
+		m_treeNodeList.push_back(m_RadiusNode); //Node 7, if no LOS, check if in detection Radius
 
 		m_BehindCoverNode = new BehindCoverCondition();
 		AddNode(m_RecentlyHitNode, m_BehindCoverNode, RIGHT_TREE_NODE); //RECENTLY HIT RIGHT
 		m_treeNodeList.push_back(m_BehindCoverNode); //Node 4, if Recently Hit, Check if Behind Cover
 
-		TreeNode* moveToCoverNode = AddNode(m_BehindCoverNode, new MoveBehindCoverAction, LEFT_TREE_NODE); //BEHIND COVER LEFT
+		TreeNode* moveToCoverNode = AddNode(m_BehindCoverNode, new MoveBehindCoverAction, LEFT_TREE_NODE); //BEHIND COVER LEFT 
 		m_treeNodeList.push_back(moveToCoverNode); //Node 5, if not Behind Cover, Move to Cover
 
 		TreeNode* waitBehindCoverNode = AddNode(m_BehindCoverNode, new WaitBehindCoverAction, RIGHT_TREE_NODE); //BEHIND COVER RIGHT
 		m_treeNodeList.push_back(waitBehindCoverNode); //Node 6, if Behind Cover, Wait specified time
 
-		m_RadiusNode = new RadiusCondition();
-		AddNode(m_LOSNode, m_RadiusNode, LEFT_TREE_NODE); //LOS LEFT
-		m_treeNodeList.push_back(m_RadiusNode); //Node 7, if no LOS, check if in detection Radius
-
-		m_AttackRangeNode = new AttackRangeCondition();
-		AddNode(m_LOSNode, m_AttackRangeNode, RIGHT_TREE_NODE); //LOS RIGHT
-		m_treeNodeList.push_back(m_AttackRangeNode); //Node 8, if LOS, check if in Attack Range
-
 		TreeNode* patrolNode = AddNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE); //RADIUS LEFT
 		m_treeNodeList.push_back(patrolNode); //Node 9, if no DR, Patrol Action
 
-		TreeNode* moveToLOSNode = AddNode(m_RadiusNode, new MoveToLOSAction, RIGHT_TREE_NODE); //RADIUS RIGHT
+		m_LOSNode = new LOSCondition();
+		AddNode(m_RadiusNode, m_LOSNode, RIGHT_TREE_NODE); //RADIUS RIGHT
+		m_treeNodeList.push_back(m_LOSNode);
+
+		TreeNode* moveToLOSNode = AddNode(m_LOSNode, new MoveToLOSAction, LEFT_TREE_NODE); //LOS LEFT
 		m_treeNodeList.push_back(moveToLOSNode); //Node 10, if has DR, Move to LOS
+
+		m_AttackRangeNode = new AttackRangeCondition(); 
+		AddNode(m_LOSNode, m_AttackRangeNode, RIGHT_TREE_NODE); //LOS RIGHT
+		m_treeNodeList.push_back(m_AttackRangeNode); //Node 8, if LOS, check if in Attack Range
 
 		TreeNode* moveToPlayerNode = AddNode(m_AttackRangeNode, new MoveToPlayerAction, LEFT_TREE_NODE); //ATTACK RANGE LEFT
 		m_treeNodeList.push_back(moveToPlayerNode); //Node 11, if not in Attack Range, Move to Player
@@ -175,26 +175,26 @@ void DecisionTree::m_buildTree()
 		m_HealthNode = new HealthCondition(); //ROOT NODE
 		m_treeNodeList.push_back(m_HealthNode); //Node 0, Check if Health < 25%
 
-		m_LOSNode = new LOSCondition();
-		AddNode(m_HealthNode, m_LOSNode, LEFT_TREE_NODE); //HEALTH LEFT
-		m_treeNodeList.push_back(m_LOSNode); //Node 2, if Health > 25%, check LOS
+		m_RadiusNode = new RadiusCondition();
+		AddNode(m_HealthNode, m_RadiusNode, LEFT_TREE_NODE); //HEALTH LEFT
+		m_treeNodeList.push_back(m_RadiusNode);//Node 4, Check Radius
 
 		TreeNode* fleeCNode = AddNode(m_HealthNode, new FleeAction, RIGHT_TREE_NODE); //HEALTH RIGHT
 		m_treeNodeList.push_back(fleeCNode); //Node 3, if Health < 25%, Flee
 
-		m_RadiusNode = new RadiusCondition();
-		AddNode(m_LOSNode, m_RadiusNode, LEFT_TREE_NODE); //LOS LEFT
-		m_treeNodeList.push_back(m_RadiusNode);//Node 4, Check Radius
+		TreeNode* patrolCNode = AddNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE); //RADIUS LEFT
+		m_treeNodeList.push_back(patrolCNode); //Node 6, if no DR, Patrol Action
+
+		m_LOSNode = new LOSCondition();
+		AddNode(m_RadiusNode, m_LOSNode, RIGHT_TREE_NODE); //RADIUS RIGHT
+		m_treeNodeList.push_back(m_LOSNode); //Node 2, if Health > 25%, check LOS
+
+		TreeNode* moveToLOSCNode = AddNode(m_LOSNode, new MoveToLOSAction, LEFT_TREE_NODE); //LOS RIGHT
+		m_treeNodeList.push_back(moveToLOSCNode); //Node 7, if has DR, Move to LOS
 
 		m_CloseCombatNode = new CloseCombatCondition();
 		AddNode(m_LOSNode, m_CloseCombatNode, RIGHT_TREE_NODE); //LOS RIGHT
 		m_treeNodeList.push_back(m_CloseCombatNode); //Node 5, if LOS, check if in CC Range
-
-		TreeNode* patrolCNode = AddNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE); //RADIUS LEFT
-		m_treeNodeList.push_back(patrolCNode); //Node 6, if no DR, Patrol Action
-
-		TreeNode* moveToLOSCNode = AddNode(m_RadiusNode, new MoveToLOSAction, RIGHT_TREE_NODE); //RADIUS RIGHT
-		m_treeNodeList.push_back(moveToLOSCNode); //Node 7, if has DR, Move to LOS
 
 		TreeNode* moveToPlayerCNode = AddNode(m_CloseCombatNode, new MoveToPlayerAction, LEFT_TREE_NODE); //CLOSE COMBAT RANGE LEFT
 		m_treeNodeList.push_back(moveToPlayerCNode); //Node 8, if not in Attack Range, Move to Player

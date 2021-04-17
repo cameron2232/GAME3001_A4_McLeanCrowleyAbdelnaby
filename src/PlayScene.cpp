@@ -8,6 +8,7 @@
 #include "imgui_sdl.h"
 #include "Renderer.h"
 #include "Util.h"
+#include "time.h"
 
 PlayScene::PlayScene()
 {
@@ -605,6 +606,7 @@ void PlayScene::start()
 
 void PlayScene::CollisionsUpdate()
 {
+	srand((unsigned)time(NULL));
 	for (auto& obj : m_pObstacle)
 	{
 		if (CollisionManager::AABBCheck(m_pShip, obj))
@@ -809,29 +811,77 @@ void PlayScene::CollisionsUpdate()
 	{
 		if (m_pEnemy[i] != nullptr)
 		{
+			int randNumb = 1 + rand() % 2;
 			if (m_pEnemy[i]->getTransform()->position.x >= 1000)
 			{
-				m_pEnemy[i]->setHealth(0);
+				removeChild(m_pEnemy[i]);
+				m_pEnemy[i] = nullptr;
+				m_pEnemy.erase(m_pEnemy.begin() + i);
+				m_pEnemy.shrink_to_fit();
+				m_RespawnEnemy(randNumb);
 				break;
 			}
 			if (m_pEnemy[i]->getTransform()->position.x <= -200)
 			{
-				m_pEnemy[i]->setHealth(0);
+				removeChild(m_pEnemy[i]);
+				m_pEnemy[i] = nullptr;
+				m_pEnemy.erase(m_pEnemy.begin() + i);
+				m_pEnemy.shrink_to_fit();
+				m_RespawnEnemy(randNumb);
 				break;
 			}
 			if (m_pEnemy[i]->getTransform()->position.y <= -200)
 			{
-				m_pEnemy[i]->setHealth(0);
+				removeChild(m_pEnemy[i]);
+				m_pEnemy[i] = nullptr;
+				m_pEnemy.erase(m_pEnemy.begin() + i);
+				m_pEnemy.shrink_to_fit();
+				m_RespawnEnemy(randNumb);
 				break;
 			}
 			if (m_pEnemy[i]->getTransform()->position.y >= 800)
 			{
-				m_pEnemy[i]->setHealth(0);
+				removeChild(m_pEnemy[i]);
+				m_pEnemy[i] = nullptr;
+				m_pEnemy.erase(m_pEnemy.begin() + i);
+				m_pEnemy.shrink_to_fit();
+				m_RespawnEnemy(randNumb);
 				break;
 			}
 		}
 	}
 }
+
+void PlayScene::m_RespawnEnemy(int numb)
+{
+	switch(numb)
+	{
+	default:
+		break;
+	case 1:
+		m_pEnemy.push_back(new REnemy());
+		m_pEnemy[m_pEnemy.size()-1]->getTransform()->position = glm::vec2(10.0f, 15.0f);
+		m_pEnemy[m_pEnemy.size() - 1]->setTargetPosition(m_pNode[0]->getTransform()->position);
+		m_pEnemy[m_pEnemy.size() - 1]->setPatrol(0, 19);
+		m_pEnemy[m_pEnemy.size() - 1]->setDebug(!m_getDebugMode());
+		addChild(m_pEnemy[m_pEnemy.size() - 1]);
+		for (auto enemy : m_pEnemy)
+			enemy->getDecisionTree()->MakeDecision();
+		break;
+
+	case 2:
+		m_pEnemy.push_back(new CCEnemy());
+		m_pEnemy[m_pEnemy.size() - 1]->getTransform()->position = m_pNode[40]->getTransform()->position;
+		m_pEnemy[m_pEnemy.size() - 1]->setTargetPosition(m_pNode[41]->getTransform()->position);
+		m_pEnemy[m_pEnemy.size() - 1]->setPatrol(40, 55);
+		m_pEnemy[m_pEnemy.size() - 1]->setDebug(!m_getDebugMode());
+		addChild(m_pEnemy[m_pEnemy.size() - 1]);
+		for (auto enemy : m_pEnemy)
+			enemy->getDecisionTree()->MakeDecision();
+		break;
+	}
+}
+
 
 //if (CollisionManager::AABBCheck(m_pEnemy[i], m_pNode[currentMapNode]))
 //{
@@ -884,7 +934,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 				EnemyFireCoolDown = 20;
 			}
 		}
-		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action") //this
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
@@ -896,12 +946,12 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			m_agent->setTargetPosition(m_pShip->getTransform()->position);
 		}
-		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action")
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action") //this
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToRangeAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 		}
-		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move Behind Cover Action")
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move Behind Cover Action") //this
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveBehindCoverAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
@@ -934,7 +984,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			m_agent->setTargetPosition(m_pShip->getTransform()->position);
 		}
-		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action") //this
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
