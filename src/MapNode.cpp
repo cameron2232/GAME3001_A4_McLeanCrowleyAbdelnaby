@@ -11,6 +11,7 @@ Node::Node(int x, int y)
 
 	setType(NODE);
 	getRigidBody()->isColliding = false;
+	m_label = new Label("--", "Consolas", 15, colour, glm::vec2(625.0f, 15.0f));
 }
 
 Node::~Node() = default;
@@ -21,12 +22,16 @@ void Node::draw()
 	{
 		TextureManager::Instance()->draw("node",
 			getTransform()->position.x, getTransform()->position.y, 0, 255, false);
+
+		m_label->getTransform()->position = getTransform()->position;
+		m_label->draw();
 	}
 	
 }
 
 void Node::update()
 {
+	
 }
 
 void Node::clean()

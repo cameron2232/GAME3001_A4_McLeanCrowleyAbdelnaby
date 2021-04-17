@@ -4,6 +4,7 @@
 #include "Agent.h"
 #include "DisplayObject.h"
 #include "TextureManager.h"
+#include "Label.h"
 
 class Node : public Agent
 {
@@ -20,6 +21,8 @@ public:
 	bool getHasLOS();
 
 	bool m_hasLOS;
+	Label* m_label;
+	SDL_Color colour = {255, 0, 0, 255};
 };
 
 #endif 

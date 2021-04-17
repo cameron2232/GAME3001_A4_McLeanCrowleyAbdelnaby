@@ -90,7 +90,7 @@ void CCEnemy::draw()
 		// draw detection radius
 		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getDetectionDistance(), getDetectionColor());
 
-
+		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), 50, getDetectionColor());
 	}
 
 	drawHeath();
