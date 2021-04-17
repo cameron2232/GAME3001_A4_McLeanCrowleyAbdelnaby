@@ -59,6 +59,8 @@ public:
 	void m_checkBounds();
 	void m_reset();
 
+	SDL_FRect* getHitBox();
+
 	//Animations
 	bool m_animationsExists(const std::string& id);
 	SpriteSheet* m_EnemyAnimation;
@@ -72,9 +74,10 @@ public:
 	float m_magnitudeDistance;
 	float m_accelerationRate;
 	bool hasDetected;
+	SDL_FRect* Hitbox;
 
 	int deathCooldown;
-	int patrolStart, patrolEnd, patrolCurrent;
+	int patrolStart, patrolEnd, patrolCurrent, attackCooldown;
 
 	//Decision Tree
 	DecisionTree* decisionTree;

@@ -262,6 +262,11 @@ void Enemy::m_reset()
 	getTransform()->position = glm::vec2(xComponent, yComponent);
 }
 
+SDL_FRect* Enemy::getHitBox()
+{
+	return Hitbox;
+}
+
 void Enemy::Attack()
 {
 	

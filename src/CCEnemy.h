@@ -26,7 +26,6 @@ public:
 private:
 	void m_buildAnimations() override;
 
-	SDL_FRect* Hitbox;
 };
 
 
