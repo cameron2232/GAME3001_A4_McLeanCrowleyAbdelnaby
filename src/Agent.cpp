@@ -180,6 +180,14 @@ void Agent::move()
 {
 }
 
+void Agent::rotate()
+{
+}
+
+void Agent::flee()
+{
+}
+
 glm::vec2 Agent::getTargetPosition() const
 {
 	return m_targetPosition;

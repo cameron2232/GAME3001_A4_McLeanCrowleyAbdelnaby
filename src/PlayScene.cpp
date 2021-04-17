@@ -62,7 +62,14 @@ void PlayScene::update()
 			m_DecisionMaking(m_pEnemy[i]);
 		}
 	}
-
+	for (int i = 0; i < m_pNode.size(); i++)
+	{
+		m_CheckNodeLOS(m_pNode[i]);
+		//if (m_pNode[i]->getHasLOS())
+		//{
+		//	std::cout << m_pNode[i]->getTransform()->position.x <<", " << m_pNode[i]->getTransform()->position.y << std::endl;
+		//}
+	}
 	//m_DecisionMaking();
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
@@ -747,31 +754,36 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 	}
 	else if (decisionTree->getCurrentNode()->name == "Patrol Action")
 	{
-		m_agent->move();
+		decisionTree->setCurrentAction(new PatrolAction());
+		decisionTree->getCurrentAction()->Action(m_agent);
 	}
 	else if (decisionTree->getCurrentNode()->name == "Move To Player Action")
 	{
-		m_agent->move();
+		decisionTree->setCurrentAction(new MoveToPlayerAction());
+		decisionTree->getCurrentAction()->Action(m_agent);
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
 	else if (decisionTree->getCurrentNode()->name == "Ranged Attack Action")
 	{
+		decisionTree->setCurrentAction(new RangeAttackAction());
+		decisionTree->getCurrentAction()->Action(m_agent);
 		if (EnemyFireCoolDown <= -20)
 		{
 			m_pEnemyBullets.push_back(new Bullet(m_agent->getTransform()->position.x + m_agent->getWidth() / 2, m_agent->getTransform()->position.y + m_agent->getHeight() / 2, m_agent->getCurrentHeading()));
 			m_pEnemyBullets[m_pEnemyBullets.size() - 1]->setRotation(m_agent->getCurrentHeading());
-			std::cout << "YESSSSSS" << std::endl;
 			EnemyFireCoolDown = 20;
 		}
 	}
 	else if (decisionTree->getCurrentNode()->name == "Move to LOS Action")
 	{
-		m_agent->rotate();
+		decisionTree->setCurrentAction(new MoveToLOSAction());
+		decisionTree->getCurrentAction()->Action(m_agent);
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
 	else if (decisionTree->getCurrentNode()->name == "Flee Action")
 	{
-		m_agent->flee();
+		decisionTree->setCurrentAction(new FleeAction());
+		decisionTree->getCurrentAction()->Action(m_agent);
 		m_agent->setTargetPosition(m_pShip->getTransform()->position);
 	}
 }
@@ -1010,5 +1022,24 @@ void PlayScene::m_CheckEnemyFireDetection(Enemy* enemy)
 	{
 		enemy->setIsInFireDetection(false);
 		enemy->setRangedAttackState(false);
+	}
+}
+
+void PlayScene::m_CheckNodeLOS(Node* node)
+{
+	for (auto obj : getDisplayList())
+	{
+		if (obj->getType() == OBSTACLE)
+		{
+			if (CollisionManager::lineRectCheck(node->getTransform()->position, m_pShip->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
+			{
+				node->setHasLOS(false);
+				return;
+			}
+			else
+			{
+				node->setHasLOS(true);
+			}
+		}
 	}
 }

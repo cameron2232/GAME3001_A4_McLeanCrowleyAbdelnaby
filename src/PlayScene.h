@@ -57,6 +57,7 @@ private:
 	bool m_getPatrolMode() const;
 	void m_CheckEnemyHealth(Enemy* enemy);
 	void m_CheckEnemyFireDetection(Enemy* enemy);
+	void m_CheckNodeLOS(Node* node);
 	int cooldown = 20;
 	DecisionTree* decisionTree;
 	const float m_playerSpeed = 5.0f;
@@ -73,7 +74,6 @@ private:
 	int footstepCooldown = 60;
 	int pfootstep = 0;
 	int EnemyFireCoolDown = 20;
-
 };
 
 
