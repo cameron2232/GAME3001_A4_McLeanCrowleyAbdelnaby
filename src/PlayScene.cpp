@@ -950,6 +950,11 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToRangeAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			Node* tempNode;
+			for(auto node : m_pNode)
+			{
+				//if()
+			}
 		}
 		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move Behind Cover Action") //this
 		{
@@ -1326,6 +1331,27 @@ void PlayScene::m_CheckNodeLOS(Node* node)
 		}
 	}
 }
+
+bool PlayScene::m_CheckNodeEnemyLOS(Node* node, Enemy* enemy)
+{
+	for (auto obj : getDisplayList())
+	{
+		if (obj->getType() == OBSTACLE)
+		{
+			if (CollisionManager::lineRectCheck(node->getTransform()->position, enemy->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
 
 void PlayScene::m_CheckTooClose(Enemy* enemy)
 {
