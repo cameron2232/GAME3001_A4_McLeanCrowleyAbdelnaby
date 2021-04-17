@@ -56,7 +56,7 @@ public:
 	int getPatrolE();
 	int getPatrolCurrent();
 	
-	void m_checkBounds();
+	//void m_checkBounds();
 	void m_reset();
 
 	SDL_FRect* getHitBox();

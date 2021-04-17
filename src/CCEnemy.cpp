@@ -100,7 +100,7 @@ void CCEnemy::draw()
 void CCEnemy::update()
 {
 	//move();
-	m_checkBounds();
+	//m_checkBounds();
 	glm::vec2 m_targetDistance = glm::vec2(abs(getTransform()->position.x - getTargetPosition().x), abs(getTransform()->position.y - getTargetPosition().y));
 	float magnitudeDistance = sqrt((m_targetDistance.x * m_targetDistance.x) + (m_targetDistance.y * m_targetDistance.y));
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));

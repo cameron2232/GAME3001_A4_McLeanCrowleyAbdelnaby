@@ -23,7 +23,7 @@ void Node::draw()
 		TextureManager::Instance()->draw("node",
 			getTransform()->position.x, getTransform()->position.y, 0, 255, false);
 
-		m_label->getTransform()->position = getTransform()->position;
+		m_label->getTransform()->position = glm::vec2(getTransform()->position.x + getWidth()/2, getTransform()->position.y + getHeight() / 2);
 		m_label->draw();
 	}
 	

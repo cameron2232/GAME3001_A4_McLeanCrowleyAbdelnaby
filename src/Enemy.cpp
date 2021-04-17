@@ -228,30 +228,30 @@ DecisionTree* Enemy::getDecisionTree()
 	return decisionTree;
 }
 
-void Enemy::m_checkBounds()
-{
-
-	if (getTransform()->position.x + getWidth() > Config::SCREEN_WIDTH)
-	{
-		getTransform()->position = glm::vec2(800.0f - getWidth(), getTransform()->position.y);
-	}
-
-	if (getTransform()->position.x < 0)
-	{
-		getTransform()->position = glm::vec2(0.0f, getTransform()->position.y);
-	}
-
-	if (getTransform()->position.y + getHeight() > Config::SCREEN_HEIGHT)
-	{
-		getTransform()->position = glm::vec2(getTransform()->position.x, 600.0f - getHeight());
-	}
-
-	if (getTransform()->position.y < 0)
-	{
-		getTransform()->position = glm::vec2(getTransform()->position.x, 0.0f);
-	}
-
-}
+//void Enemy::m_checkBounds()
+//{
+//
+//	if (getTransform()->position.x + getWidth() > Config::SCREEN_WIDTH)
+//	{
+//		getTransform()->position = glm::vec2(800.0f - getWidth(), getTransform()->position.y);
+//	}
+//
+//	if (getTransform()->position.x < 0)
+//	{
+//		getTransform()->position = glm::vec2(0.0f, getTransform()->position.y);
+//	}
+//
+//	if (getTransform()->position.y + getHeight() > Config::SCREEN_HEIGHT)
+//	{
+//		getTransform()->position = glm::vec2(getTransform()->position.x, 600.0f - getHeight());
+//	}
+//
+//	if (getTransform()->position.y < 0)
+//	{
+//		getTransform()->position = glm::vec2(getTransform()->position.x, 0.0f);
+//	}
+//
+//}
 
 void Enemy::m_reset()
 {
