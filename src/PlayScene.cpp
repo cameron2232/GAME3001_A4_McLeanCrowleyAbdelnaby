@@ -117,15 +117,17 @@ void PlayScene::update()
 	}
 
 	if(m_meleeActtack != nullptr)
+	{
 		m_meleeActtack->getTransform()->position = m_pShip->getTransform()->position - glm::vec2(-10.0f, 10.f);
+		m_meleeActtack->setDirection(m_pShip->getCurrentHeading() + 90);
+	}
 	//for (int i = 0; i < m_pPlayerBullets.size(); i++)
 	//{
 	//	m_pPlayerBullets[i]->setRotation(m_pShip->getCurrentHeading());
 	//}
-	m_meleeActtack->setDirection(m_pShip->getCurrentHeading() + 90);
 
 
-	for (int i = 0; i < m_pEnemy.size(); i++)
+	/*for (int i = 0; i < m_pEnemy.size(); i++)
 	{
 		if (CollisionManager::AABBCheck(m_pEnemy[i], m_pNode[currentMapNode]))
 		{
@@ -138,7 +140,7 @@ void PlayScene::update()
 			m_pEnemy[i]->setTargetPosition(glm::vec2(m_pNode[currentMapNode]->getTransform()->position.x - (m_pNode[currentMapNode]->getWidth() / 2),
 				m_pNode[currentMapNode]->getTransform()->position.y - (m_pNode[currentMapNode]->getHeight() / 2)));
 		}
-	}
+	}*/
 
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
@@ -518,11 +520,15 @@ void PlayScene::start()
 	//m_pEnemy.push_back(new CCEnemy());
 	m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 	m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
+	m_pEnemy[0]->setPatrol(0, 19);
 	addChild(m_pEnemy[0]);
 
-	//m_pEnemy[1]->getTransform()->position = glm::vec2(100.0f, 15.0f);
-	//m_pEnemy[1]->setTargetPosition(m_pNode[5]->getTransform()->position);
-	//addChild(m_pEnemy[1]);
+	m_pEnemy.push_back(new CCEnemy());
+	m_pEnemy[1]->getTransform()->position = glm::vec2(10.0f, 15.0f);
+	m_pEnemy[1]->setTargetPosition(m_pNode[1]->getTransform()->position);
+	m_pEnemy[1]->setPatrol(0, 19);
+	addChild(m_pEnemy[1]);
+
 	// Create Decision Tree
 	
 
@@ -754,60 +760,125 @@ void PlayScene::CollisionsUpdate()
 	}
 }
 
+//if (CollisionManager::AABBCheck(m_pEnemy[i], m_pNode[currentMapNode]))
+//{
+//	if (currentMapNode == 19)
+//		currentMapNode = 0;
+//	else
+//	{
+//		currentMapNode++;
+//	}
+//	m_pEnemy[i]->setTargetPosition(glm::vec2(m_pNode[currentMapNode]->getTransform()->position.x - (m_pNode[currentMapNode]->getWidth() / 2),
+//		m_pNode[currentMapNode]->getTransform()->position.y - (m_pNode[currentMapNode]->getHeight() / 2)));
+//}
+
 void PlayScene::m_DecisionMaking(Enemy* m_agent)
 {
 	if (m_agent == nullptr)
 	{
 		return;
 	}
-	if (m_agent->getDecisionTree()->getCurrentNode()->name == "Patrol Action")
+	if (m_agent->getAgentType() == RANGED_ENEMY)
 	{
-		m_agent->getDecisionTree()->setCurrentAction(new PatrolAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-	}
-	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Player Action")
-	{
-		m_agent->getDecisionTree()->setCurrentAction(new MoveToPlayerAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-		m_agent->setTargetPosition(m_pShip->getTransform()->position);
-	}
-	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Ranged Attack Action")
-	{
-		m_agent->getDecisionTree()->setCurrentAction(new RangeAttackAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-		if (EnemyFireCoolDown <= -20)
+		if (m_agent->getDecisionTree()->getCurrentNode()->name == "Patrol Action")
 		{
-			m_pEnemyBullets.push_back(new Bullet(m_agent->getTransform()->position.x + m_agent->getWidth() / 2, m_agent->getTransform()->position.y + m_agent->getHeight() / 2, m_agent->getCurrentHeading()));
-			m_pEnemyBullets[m_pEnemyBullets.size() - 1]->setRotation(m_agent->getCurrentHeading());
-			EnemyFireCoolDown = 20;
+			m_agent->getDecisionTree()->setCurrentAction(new PatrolAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			if(CollisionManager::AABBCheck(m_agent, m_pNode[m_agent->getPatrolCurrent()]))
+			{
+				if (m_agent->getPatrolS() == m_agent->getPatrolE())
+					m_agent->setPatrol(m_agent->getPatrolS(), m_agent->getPatrolE());
+				else
+					m_agent->setPatrolCurrent(m_agent->getPatrolCurrent() + 1);
+			}
+			m_agent->setTargetPosition(glm::vec2(m_pNode[m_agent->getPatrolCurrent()]->getTransform()->position.x - (m_pNode[m_agent->getPatrolCurrent()]->getWidth() / 2),
+					m_pNode[m_agent->getPatrolCurrent()]->getTransform()->position.y - (m_pNode[m_agent->getPatrolCurrent()]->getHeight() / 2)));
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Player Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new MoveToPlayerAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Ranged Attack Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new RangeAttackAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			if (EnemyFireCoolDown <= -20)
+			{
+				m_pEnemyBullets.push_back(new Bullet(m_agent->getTransform()->position.x + m_agent->getWidth() / 2, m_agent->getTransform()->position.y + m_agent->getHeight() / 2, m_agent->getCurrentHeading()));
+				m_pEnemyBullets[m_pEnemyBullets.size() - 1]->setRotation(m_agent->getCurrentHeading());
+				EnemyFireCoolDown = 20;
+			}
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Flee Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new FleeAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new MoveToRangeAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move Behind Cover Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new MoveBehindCoverAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Wait Behind Cover Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new WaitBehindCoverAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 		}
 	}
-	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
+	else if(m_agent->getAgentType() == CLOSE_COMBAT_ENEMY)
 	{
-		m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-		m_agent->setTargetPosition(m_pShip->getTransform()->position);
-	}
-	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Flee Action")
-	{
-		m_agent->getDecisionTree()->setCurrentAction(new FleeAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-		m_agent->setTargetPosition(m_pShip->getTransform()->position);
-	}
-	else if(m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action")
-	{
-		m_agent->getDecisionTree()->setCurrentAction(new MoveToRangeAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-	}
-	else if(m_agent->getDecisionTree()->getCurrentNode()->name == "Move Behind Cover Action")
-	{
-		m_agent->getDecisionTree()->setCurrentAction(new MoveBehindCoverAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-	}
-	else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Wait Behind Cover Action")
-	{
-		m_agent->getDecisionTree()->setCurrentAction(new WaitBehindCoverAction());
-		m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+		if (m_agent->getDecisionTree()->getCurrentNode()->name == "Patrol Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new PatrolAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			if (CollisionManager::AABBCheck(m_agent, m_pNode[m_agent->getPatrolCurrent()]))
+			{
+				if (m_agent->getPatrolS() == m_agent->getPatrolE())
+					m_agent->setPatrol(m_agent->getPatrolS(), m_agent->getPatrolE());
+				else
+					m_agent->setPatrolCurrent(m_agent->getPatrolCurrent() + 1);
+			}
+			m_agent->setTargetPosition(glm::vec2(m_pNode[m_agent->getPatrolCurrent()]->getTransform()->position.x - (m_pNode[m_agent->getPatrolCurrent()]->getWidth() / 2),
+				m_pNode[m_agent->getPatrolCurrent()]->getTransform()->position.y - (m_pNode[m_agent->getPatrolCurrent()]->getHeight() / 2)));
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Player Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new MoveToPlayerAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+		}
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Flee Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new FleeAction());
+			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+		}
+		//Close Combat Action
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Close Combat Action")
+		{
+			m_agent->getDecisionTree()->setCurrentAction(new CloseCombatAction());
+			m_agent->Attack();
+		}
 	}
 }
 
@@ -953,10 +1024,16 @@ void PlayScene::m_CheckShipLOS(DisplayObject* target_object)
 void PlayScene::m_CheckEnemyDetection(Enemy* enemy)
 {
 	// if ship to target distance is less than or equal to detection Distance
+	if(enemy->getHasDetected())
+	{
+		enemy->setHasDetection(true);
+		return;
+	}
 	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
 	if (ShipToTargetDistance <= enemy->getDetectionDistance())
 	{
 		enemy->setHasDetection(true);
+		enemy->setHasDetected(true);
 	}
 	else
 	{

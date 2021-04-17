@@ -31,13 +31,16 @@ public:
 	void move() override;
 	void rotate();
 	void flee();
+	virtual void Attack();
 
 	// getters
 	float getMaxSpeed() const;
 	float getTargetDistance() const;
+	bool getHasDetected() const;
 
 	// setters
 	void setMaxSpeed(float newSpeed);
+	void setHasDetected(bool state);
 
 	//Animations
 	void setAnimationState(PlayerAnimationState new_state);
@@ -45,6 +48,13 @@ public:
 	Animation& getAnimation(const std::string& name);
 	void setSpriteSheet(SpriteSheet* sprite_sheet);
 	void setAnimation(const Animation& animation);
+
+	void setPatrol(int s, int e);
+	void setPatrolCurrent(int c);
+
+	int getPatrolS();
+	int getPatrolE();
+	int getPatrolCurrent();
 	
 	void m_checkBounds();
 	void m_reset();
@@ -61,6 +71,9 @@ public:
 	glm::vec2 m_targetDirection;
 	float m_magnitudeDistance;
 	float m_accelerationRate;
+	bool hasDetected;
+
+	int patrolStart, patrolEnd, patrolCurrent;
 
 	//Decision Tree
 	DecisionTree* decisionTree;
