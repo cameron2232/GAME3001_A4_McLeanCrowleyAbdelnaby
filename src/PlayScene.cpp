@@ -170,6 +170,10 @@ void PlayScene::update()
 			m_pEnemy[i] = nullptr;
 			m_pEnemy.erase(m_pEnemy.begin() + i);
 			m_pEnemy.shrink_to_fit();
+			if (m_pEnemy.empty())
+			{
+				TheGame::Instance()->changeSceneState(END_SCENE);
+			}
 			break;
 		}
 	}
