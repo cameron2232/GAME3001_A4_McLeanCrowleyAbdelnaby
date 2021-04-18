@@ -948,12 +948,22 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 		}
 		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action") //this
 		{
+			Node* tempNode = m_pNode[0];
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToRangeAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-			Node* tempNode;
 			for(auto node : m_pNode)
 			{
-				//if()
+				if(m_CheckNodeEnemyLOS(node, m_agent) && node->getHasLOS())
+				{
+					if (Util::distance(node->getTransform()->position, m_pShip->getTransform()->position) > m_agent->getMinFireDistance())
+					{
+						if(Util::distance(node->getTransform()->position, m_agent->getTransform()->position) <= Util::distance(tempNode->getTransform()->position, m_agent->getTransform()->position))
+						{
+							tempNode = node;
+							m_agent->setTargetPosition(tempNode->getTransform()->position);
+						}
+					}
+				}
 			}
 		}
 		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move Behind Cover Action") //this
@@ -1332,7 +1342,7 @@ void PlayScene::m_CheckNodeLOS(Node* node)
 	}
 }
 
-bool PlayScene::m_CheckNodeEnemyLOS(Node* node, Enemy* enemy)
+bool PlayScene::m_CheckNodeEnemyLOS(Node* node, Agent* enemy)
 {
 	for (auto obj : getDisplayList())
 	{
