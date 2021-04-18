@@ -146,18 +146,7 @@ void PlayScene::update()
 		m_meleeActtack->setDirection(m_pShip->getCurrentHeading() + 90);
 	}
 
-	for (int i = 0; i < m_pEnemy.size(); i++)
-	{
-		if(m_pEnemy[i]->getAgentType() != RANGED_ENEMY)
-		{
-			if (m_pEnemy[i]->getAnimationState() != ENEMY_DAMAGE && m_pEnemy[i]->getAnimationState() != ENEMY_DEATH)
-			{
-				m_pEnemy[i]->setAnimationState(ENEMY_RUN);
-				std::cout << "Setting animation to run\n";
-			}
-			
-		}
-	}
+	
 	//for (int i = 0; i < m_pPlayerBullets.size(); i++)
 	//{
 	//	m_pPlayerBullets[i]->setRotation(m_pShip->getCurrentHeading());
@@ -193,6 +182,7 @@ void PlayScene::update()
 	{
 		if (m_pEnemy[i]->getAnimationState() == ENEMY_DEATH)
 		{
+			std::cout << "Death Animation\n";
 			m_pEnemy[i]->deathCooldown--;
 		}
 		if(m_pEnemy[i]->deathCooldown <= 0)
@@ -223,6 +213,21 @@ void PlayScene::update()
 		{
 			damageCooldown = 60;
 			m_pEnemy[i]->setAnimationState(ENEMY_IDLE);
+		}
+	}
+
+	for (int i = 0; i < m_pEnemy.size(); i++)
+	{
+		if (m_pEnemy[i]->getAnimationState() == ENEMY_DAMAGE && m_pEnemy[i]->getAgentType() != RANGED_ENEMY)
+		{
+			std::cout << "Reducing dmg cooldown\n\n\n\n\n";
+			meleeDamageCooldown--;
+		}
+
+		if (meleeDamageCooldown <= 0 && m_pEnemy[i]->getAgentType() != RANGED_ENEMY)
+		{
+			meleeDamageCooldown = 60;
+			m_pEnemy[i]->setAnimationState(ENEMY_RUN);
 		}
 	}
 
@@ -1109,7 +1114,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new CloseCombatAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-			m_agent->setAnimationState(ENEMY_DAMAGE);
+			m_agent->setAnimationState(ENEMY_MELEE);
 			m_agent->Attack();
 			//SDL_FRect* shipRect = new SDL_FRect{ m_pShip->getTransform()->position.x,  m_pShip->getTransform()->position.y, m_pShip->getWidth(), m_pShip->getHeight() };
 			if((CollisionManager::AABBCheck(m_agent, m_pShip) && m_agent->attackCooldown <= 0))
@@ -1397,7 +1402,8 @@ void PlayScene::m_CheckCloseCombatRange(Enemy* enemy)
 	else
 	{
 		enemy->setCloseCombat(false);
-		enemy->setAnimationState(ENEMY_RUN);
+		if(enemy->getAnimationState()!= ENEMY_DAMAGE && enemy->getAnimationState() != ENEMY_DEATH)
+			enemy->setAnimationState(ENEMY_RUN);
 	}
 }
 
