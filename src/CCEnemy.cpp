@@ -73,7 +73,7 @@ void CCEnemy::draw()
 		break;
 
 	case CCENEMY_ATTACK:
-		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("damage"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("attack"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
 	/*case ENEMY_DEATH:
@@ -144,11 +144,11 @@ void CCEnemy::m_buildAnimations()
 	Animation attackAnimation = Animation();
 
 	attackAnimation.name = "attack";
-	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-1"));
-	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-2"));
-	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-3"));
-	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-4"));
-	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-5"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-1"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-2"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-3"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-4"));
+	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-5"));
 
 	setAnimation(attackAnimation);
 
