@@ -37,7 +37,7 @@ CCEnemy::CCEnemy()
 	setHasDetection(false);
 	setHealth(3);
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
-	setAnimationState(ENEMY_IDLE);
+	setAnimationState(ENEMY_RUN);
 	setAgentType(CLOSE_COMBAT_ENEMY);
 
 	setFireDistance(50.0f); //Can fire in this range
@@ -72,8 +72,8 @@ void CCEnemy::draw()
 		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("run"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
-	case CCENEMY_ATTACK:
-		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("attack"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
+	case ENEMY_DAMAGE:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("melee"), x, y, 0.20f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
 	/*case ENEMY_DEATH:
@@ -114,7 +114,7 @@ void CCEnemy::clean()
 
 void CCEnemy::Attack()
 {
-	setAnimationState(CCENEMY_ATTACK);	
+	//setAnimationState(CCENEMY_ATTACK);	
 }
 
 void CCEnemy::m_buildAnimations()
@@ -143,7 +143,7 @@ void CCEnemy::m_buildAnimations()
 
 	Animation attackAnimation = Animation();
 
-	attackAnimation.name = "attack";
+	attackAnimation.name = "melee";
 	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-1"));
 	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-2"));
 	attackAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-attack-3"));

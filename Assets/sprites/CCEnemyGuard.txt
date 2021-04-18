@@ -6,10 +6,10 @@ ccguard-walking-5 0 48 47 42
 ccguard-walking-6 48 48 47 42
 ccguard-walking-7 96 48 47 42
 ccguard-walking-8 142 48 47 42
-ccguard-attack-1 0 147 47 42
-ccguard-attack-2 48 147 47 42
-ccguard-attack-3 96 147 47 42
-ccguard-attack-4 142 147 47 42
-ccguard-attack-5 196 147 47 42
+ccguard-attack-1 1 149 44 29
+ccguard-attack-2 51 149 43 29
+ccguard-attack-3 102 148 41 40
+ccguard-attack-4 152 148 40 36
+ccguard-attack-5 197 149 42 36
 ccguard-idle-1 0 192 47 42
 ccguard-idle-2 48 192 47 42

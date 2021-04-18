@@ -95,6 +95,8 @@ void PlayScene::update()
 				m_pEnemy[i]->setHitState(false);
 			}
 		}
+		if (m_pEnemy[i]->getAgentType() == CLOSE_COMBAT_ENEMY)
+			m_CheckCloseCombatRange(m_pEnemy[i]);
 	}
 
 	if (m_getPatrolMode())
@@ -108,16 +110,17 @@ void PlayScene::update()
 		//decisionTree->Update();
 		for (int i = 0; i < m_pEnemy.size(); i++)
 		{
-			if (m_pEnemy[i]->getAnimationState() != ENEMY_DAMAGE && m_pEnemy[i]->getAnimationState() != ENEMY_DEATH)
+			if (m_pEnemy[i]->getAnimationState() != ENEMY_DAMAGE && m_pEnemy[i]->getAnimationState() != ENEMY_DEATH && m_pEnemy[i]->getAgentType() != CLOSE_COMBAT_ENEMY)
 				m_pEnemy[i]->setAnimationState(ENEMY_RUN);
 		}
 		
 	}
+
 	else
 	{
 		for (int i = 0; i < m_pEnemy.size(); i++)
 		{
-			if (m_pEnemy[i]->getAnimationState() != ENEMY_DAMAGE && m_pEnemy[i]->getAnimationState() != ENEMY_DEATH)
+			if (m_pEnemy[i]->getAnimationState() != ENEMY_DAMAGE && m_pEnemy[i]->getAnimationState() != ENEMY_DEATH && m_pEnemy[i]->getAgentType() != CLOSE_COMBAT_ENEMY)
 				m_pEnemy[i]->setAnimationState(ENEMY_IDLE);
 		}
 	}
@@ -126,6 +129,19 @@ void PlayScene::update()
 	{
 		m_meleeActtack->getTransform()->position = m_pShip->getTransform()->position - glm::vec2(-10.0f, 10.f);
 		m_meleeActtack->setDirection(m_pShip->getCurrentHeading() + 90);
+	}
+
+	for (int i = 0; i < m_pEnemy.size(); i++)
+	{
+		if(m_pEnemy[i]->getAgentType() != RANGED_ENEMY)
+		{
+			if (m_pEnemy[i]->getAnimationState() != ENEMY_DAMAGE && m_pEnemy[i]->getAnimationState() != ENEMY_DEATH)
+			{
+				m_pEnemy[i]->setAnimationState(ENEMY_RUN);
+				std::cout << "Setting animation to run\n";
+			}
+			
+		}
 	}
 	//for (int i = 0; i < m_pPlayerBullets.size(); i++)
 	//{
@@ -183,12 +199,12 @@ void PlayScene::update()
 
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
-		if (m_pEnemy[i]->getAnimationState() == ENEMY_DAMAGE)
+		if (m_pEnemy[i]->getAnimationState() == ENEMY_DAMAGE && m_pEnemy[i]->getAgentType() != CLOSE_COMBAT_ENEMY)
 		{
 			damageCooldown--;
 		}
 
-		if(damageCooldown <= 0)
+		if(damageCooldown <= 0 && m_pEnemy[i]->getAgentType() != CLOSE_COMBAT_ENEMY)
 		{
 			damageCooldown = 60;
 			m_pEnemy[i]->setAnimationState(ENEMY_IDLE);
@@ -740,7 +756,7 @@ void PlayScene::CollisionsUpdate()
 			}
 		}
 	}
-	if (m_meleeActtack->isEnabled())
+	/*if (m_meleeActtack->isEnabled())
 	{
 		for (int i = 0; i < m_pEnemy.size(); i++)
 		{
@@ -751,7 +767,7 @@ void PlayScene::CollisionsUpdate()
 				m_pEnemy[i]->setHealth(m_pEnemy[i]->getHealth() - 1);
 			}
 		}
-	}
+	}*/
 
 	for (int i = 0; i < m_pEnemyBullets.size(); i++)
 	{
@@ -1070,11 +1086,11 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new CloseCombatAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			m_agent->setAnimationState(ENEMY_DAMAGE);
 			m_agent->Attack();
 			//SDL_FRect* shipRect = new SDL_FRect{ m_pShip->getTransform()->position.x,  m_pShip->getTransform()->position.y, m_pShip->getWidth(), m_pShip->getHeight() };
 			if((CollisionManager::AABBCheck(m_agent, m_pShip) && m_agent->attackCooldown <= 0))
 			{
-				m_agent->setAnimationState(CCENEMY_ATTACK);
 				m_agent->attackCooldown = 80;
 				m_pShip->setHealth(m_pShip->getHealth() - 1);
 			}
@@ -1358,6 +1374,7 @@ void PlayScene::m_CheckCloseCombatRange(Enemy* enemy)
 	else
 	{
 		enemy->setCloseCombat(false);
+		enemy->setAnimationState(ENEMY_RUN);
 	}
 }
 
