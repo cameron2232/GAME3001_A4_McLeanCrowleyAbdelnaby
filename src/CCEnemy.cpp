@@ -72,13 +72,17 @@ void CCEnemy::draw()
 		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("run"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
-	case ENEMY_DAMAGE:
+	case ENEMY_MELEE:
 		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("melee"), x, y, 0.20f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
 		break;
 
-	/*case ENEMY_DEATH:
-		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("death"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
-		break;*/
+	case ENEMY_DAMAGE:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("damage"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
+		break;
+
+	case ENEMY_DEATH:
+		TextureManager::Instance()->playAnimation("CCGuardSheet", getAnimation("death"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false, SDL_FLIP_VERTICAL);
+		break;
 	}
 
 	// draw LOS
@@ -152,13 +156,23 @@ void CCEnemy::m_buildAnimations()
 
 	setAnimation(attackAnimation);
 
-	/*Animation deathAnimation = Animation();
+	Animation deathAnimation = Animation();
 
 	deathAnimation.name = "death";
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-1"));
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-2"));
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-3"));
-	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("guard-death-4"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-death-1"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-death-2"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-death-3"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-death-4"));
+	deathAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-death-5"));
 
-	setAnimation(deathAnimation);*/
+	setAnimation(deathAnimation);
+
+	Animation damageAnimation = Animation();
+
+	damageAnimation.name = "damage";
+	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-1"));
+	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-2"));
+	damageAnimation.frames.push_back(m_EnemyAnimation->getFrame("ccguard-damage-3"));
+
+	setAnimation(damageAnimation);
 }

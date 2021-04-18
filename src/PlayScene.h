@@ -78,6 +78,7 @@ private:
 	Label* instructions;
 	int deathCooldown = 60;
 	int damageCooldown = 60;
+	int meleeDamageCooldown = 60;
 	int footstepCooldown = 60;
 	int pfootstep = 0;
 	int EnemyFireCoolDown = 20;
