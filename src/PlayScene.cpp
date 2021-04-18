@@ -933,12 +933,23 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 				m_pEnemyBullets[m_pEnemyBullets.size() - 1]->setRotation(m_agent->getCurrentHeading());
 				EnemyFireCoolDown = 20;
 			}
+			m_agent->setTargetPosition(m_pShip->getTransform()->position);
 		}
-		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action") //this
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move to LOS Action")
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+			for (auto node : m_pNode)
+			{
+				if (m_CheckNodeEnemyLOS(node, m_agent))
+				{
+					if (node->getHasLOS())
+					{
+						m_agent->setTargetPosition(node->getTransform()->position);
+					}
+				}
+			}
+
 		}
 		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Flee Action")
 		{
@@ -946,7 +957,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			m_agent->setTargetPosition(m_pShip->getTransform()->position);
 		}
-		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action") //this
+		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Move To Range Action")
 		{
 			Node* tempNode = m_pNode[0];
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToRangeAction());
@@ -970,6 +981,33 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveBehindCoverAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
+			for (auto node : m_pNode)
+			{
+				if (!node->getHasLOS())
+				{
+					if (!m_CheckNodeEnemyLOS(node, m_agent))
+					{
+						for (auto node1 : m_pNode)
+						{
+							if (m_CheckNodeEnemyLOS(node, node1) && !(node == node1))
+							{
+								m_agent->setTargetPosition(node1->getTransform()->position);
+								break;
+							}
+							else
+							{
+								m_agent->setTargetPosition(node->getTransform()->position);
+								break;
+							}
+						}
+					}
+					else
+					{
+						m_agent->setTargetPosition(node->getTransform()->position);
+						break;
+					}
+				}
+			}
 		}
 		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Wait Behind Cover Action")
 		{
