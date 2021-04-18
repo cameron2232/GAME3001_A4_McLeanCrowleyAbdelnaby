@@ -60,7 +60,7 @@ private:
 	void m_CheckCloseCombatRange(Enemy* enemy);
 	void m_CheckEnemyFireDetection(Enemy* enemy);
 	void m_CheckNodeLOS(Node* node);
-	bool m_CheckNodeEnemyLOS(Node* node, Enemy* enemy);
+	bool m_CheckNodeEnemyLOS(Node* node, Agent* enemy);
 	void m_CheckBehindCover(Enemy* enemy);
 	void m_CheckTooClose(Enemy* enemy);
 	void m_RespawnEnemy(int numb);

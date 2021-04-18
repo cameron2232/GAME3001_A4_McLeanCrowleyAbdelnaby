@@ -13,4 +13,5 @@ MoveBehindCoverAction::~MoveBehindCoverAction()
 void MoveBehindCoverAction::Action(Agent* m_agent)
 {
 	std::cout << "Performing Move Behind Cover Action" << std::endl;
+	m_agent->move();
 }
