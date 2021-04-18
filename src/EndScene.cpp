@@ -50,7 +50,7 @@ void EndScene::start()
 {
 	const SDL_Color red = { 255, 0, 0, 255 };
 
-	m_Victory = new Label("VICTORY ACHIEVED", "Dock51", 85, red, glm::vec2(450.0f, 40.0f));
+	m_Victory = new Label("VICTORY ACHIEVED", "Dock51", 85, red, glm::vec2(400.0f, 100.0f));
 	m_Victory->setParent(this);
 	addChild(m_Victory);
 

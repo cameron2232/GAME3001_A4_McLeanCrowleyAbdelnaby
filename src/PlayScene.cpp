@@ -1063,7 +1063,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			m_agent->Attack();
 			//SDL_FRect* shipRect = new SDL_FRect{ m_pShip->getTransform()->position.x,  m_pShip->getTransform()->position.y, m_pShip->getWidth(), m_pShip->getHeight() };
-			if((CollisionManager::AABBRectCheck(m_agent->getHitBox(), m_pShip) && m_agent->attackCooldown <= 0))
+			if((CollisionManager::AABBCheck(m_agent, m_pShip) && m_agent->attackCooldown <= 0))
 			{
 				m_agent->attackCooldown = 80;
 				m_pShip->setHealth(m_pShip->getHealth() - 1);
