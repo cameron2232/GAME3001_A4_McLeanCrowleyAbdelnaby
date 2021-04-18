@@ -49,9 +49,12 @@ void PlayScene::update()
 	{
 		enemy->getDecisionTree()->MakeDecision();
 	}
-	if (m_pEnemy[0]->getHealth() == 1)
+	for(auto enemy: m_pEnemy)
 	{
-		m_pEnemy[0]->setHealthState(true);
+		if (enemy->getHealth() == 1)
+		{
+			enemy->setHealthState(true);
+		}
 	}
 	//std::cout << m_pPlayerBullets.size() << std::endl;
 	EnemyFireCoolDown--;
