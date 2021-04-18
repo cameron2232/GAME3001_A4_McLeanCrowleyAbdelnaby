@@ -44,7 +44,8 @@ void PlayScene::draw()
 }
 
 void PlayScene::update()
-{
+{ 
+	
 	for(auto enemy : m_pEnemy)
 	{
 		enemy->getDecisionTree()->MakeDecision();
@@ -178,6 +179,7 @@ void PlayScene::update()
 			break;
 		}
 	}
+	
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
 		if (m_pEnemy[i]->getAnimationState() == ENEMY_DEATH)
@@ -201,6 +203,7 @@ void PlayScene::update()
 			break;
 		}
 	}
+
 
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
@@ -260,7 +263,7 @@ void PlayScene::handleEvents()
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_2))
 	{
-		TheGame::Instance()->changeSceneState(END_SCENE);
+		TheGame::Instance()->changeSceneState(LOSE_SCENE);
 	}
 
 	if(EventManager::Instance().isKeyDown(SDL_SCANCODE_H))
@@ -287,10 +290,13 @@ void PlayScene::handleEvents()
 	{
 		if (cooldown <= -20)
 		{
-			if(m_pShip->getHealth() != 3)
-				m_pShip->setHealth(m_pShip->getHealth() + 1);
-			std::cout << m_pShip->getHealth() << std::endl;
-			cooldown = 20;
+			if(m_pShip != nullptr)
+			{
+				if (m_pShip->getHealth() != 3)
+					m_pShip->setHealth(m_pShip->getHealth() + 1);
+				std::cout << m_pShip->getHealth() << std::endl;
+				cooldown = 20;
+			}
 		}
 	}
 
@@ -313,9 +319,12 @@ void PlayScene::handleEvents()
 	{
 		if (cooldown <= -20)
 		{
-			m_pShip->setHealth(m_pShip->getHealth() - 1);
-			std::cout << m_pShip->getHealth() << std::endl;
-			cooldown = 20;
+			if(m_pShip != nullptr)
+			{
+				m_pShip->setHealth(m_pShip->getHealth() - 1);
+				std::cout << m_pShip->getHealth() << std::endl;
+				cooldown = 20;
+			}
 		}
 	}
 
@@ -455,9 +464,9 @@ void PlayScene::start()
 
 
 	// add the ship to the scene as a start point
-	m_pShip = new Ship();
-	m_pShip->getTransform()->position = glm::vec2(50.0f, 550.0f);
-	addChild(m_pShip, 2);
+	//m_pShip = new Ship();
+	//m_pShip->getTransform()->position = glm::vec2(50.0f, 550.0f);
+	//addChild(m_pShip);
 
 
 	// add the Obstacle to the scene as a start point
@@ -614,6 +623,10 @@ void PlayScene::start()
 	for (auto node : m_pNode)
 		addChild(node);
 
+	m_pShip = new Ship();
+	m_pShip->getTransform()->position = glm::vec2(50.0f, 550.0f);
+	addChild(m_pShip);
+
 	m_pEnemy.push_back(new REnemy());
 	m_pEnemy[0]->getTransform()->position = glm::vec2(10.0f, 15.0f);
 	m_pEnemy[0]->setTargetPosition(m_pNode[0]->getTransform()->position);
@@ -630,6 +643,7 @@ void PlayScene::start()
 	m_meleeActtack = new MeleeAttack(m_pShip->getCurrentHeading());
 
 
+
 	std::cout << "------------------------" << std::endl;
 	for (auto enemy : m_pEnemy)
 		enemy->getDecisionTree()->MakeDecision();
@@ -642,6 +656,7 @@ void PlayScene::start()
 	SoundManager::Instance().load("../Assets/audio/ewalk.wav", "EWalk", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/hitsound.wav", "Hit", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/meleehit.wav", "Melee", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/ccenemyattack.wav", "CCattack", SOUND_SFX);
 
 	SoundManager::Instance().allocateChannels(16);
 
@@ -839,11 +854,10 @@ void PlayScene::CollisionsUpdate()
 
 				if (CollisionManager::AABBCheck(m_pEnemyBullets[i],m_pShip))
 				{
-					m_pShip->setAnimationState(ENEMY_DAMAGE);
-					m_pShip->setHealth(m_pShip->getHealth() - 1);
+					if(m_pShip != nullptr)
+						m_pShip->setHealth(m_pShip->getHealth() - 1);
+					
 				}
-
-
 			}
 			for (auto obstacle : m_pObstacle)
 			{
@@ -1119,8 +1133,10 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			//SDL_FRect* shipRect = new SDL_FRect{ m_pShip->getTransform()->position.x,  m_pShip->getTransform()->position.y, m_pShip->getWidth(), m_pShip->getHeight() };
 			if((CollisionManager::AABBCheck(m_agent, m_pShip) && m_agent->attackCooldown <= 0))
 			{
+				SoundManager::Instance().playSound("CCattack", 0, -1);
 				m_agent->attackCooldown = 80;
-				m_pShip->setHealth(m_pShip->getHealth() - 1);
+				if(m_pShip != nullptr)
+					m_pShip->setHealth(m_pShip->getHealth() - 1);
 			}
 		}
 	}
