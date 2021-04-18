@@ -48,10 +48,11 @@ void EndScene::handleEvents()
 
 void EndScene::start()
 {
-	const SDL_Color blue = { 0, 0, 255, 255 };
-	m_label = new Label("END SCENE", "Dock51", 80, blue, glm::vec2(400.0f, 40.0f));
-	m_label->setParent(this);
-	addChild(m_label);
+	const SDL_Color red = { 255, 0, 0, 255 };
+
+	m_Victory = new Label("VICTORY ACHIEVED", "Dock51", 85, red, glm::vec2(450.0f, 40.0f));
+	m_Victory->setParent(this);
+	addChild(m_Victory);
 
 	// Restart Button
 	m_pRestartButton = new Button("../Assets/textures/restartButton.png", "restartButton", RESTART_BUTTON);
