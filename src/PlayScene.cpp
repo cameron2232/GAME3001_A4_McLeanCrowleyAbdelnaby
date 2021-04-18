@@ -1048,7 +1048,16 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 		{
 			m_agent->getDecisionTree()->setCurrentAction(new MoveToLOSAction());
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
-			m_agent->setTargetPosition(m_pShip->getTransform()->position);
+			for (auto node : m_pNode)
+			{
+				if (m_CheckNodeEnemyLOS(node, m_agent))
+				{
+					if (node->getHasLOS())
+					{
+						m_agent->setTargetPosition(node->getTransform()->position);
+					}
+				}
+			}
 		}
 		else if (m_agent->getDecisionTree()->getCurrentNode()->name == "Flee Action")
 		{
