@@ -30,8 +30,6 @@ public:
 	virtual void start() override;
 	void CollisionsUpdate();
 
-	
-
 private:
 	void m_DecisionMaking(Enemy* m_agent);
 	void m_CheckEnemyBehindCover(Enemy* enemy);
@@ -83,7 +81,6 @@ private:
 	int pfootstep = 0;
 	int EnemyFireCoolDown = 20;
 	int CCEnemyAttackCoolDown = 5;
-
 };
 
 

@@ -24,14 +24,10 @@ void PlayScene::draw()
 		0, getTransform()->position.y, 0, 255, false);
 	
 	for (int i = 0; i < m_pPlayerBullets.size(); i++)
-	{
 		addChild(m_pPlayerBullets[i]);
-	}
+
 	for (int i = 0; i < m_pEnemyBullets.size(); i++)
-	{
 		addChild(m_pEnemyBullets[i]);
-	}
-	//Util::DrawLine(m_pEnemy[0]->getTransform()->position, m_pShip->getTransform()->position, glm::vec4(1, 0, 0, 1));
 
 	drawDisplayList();
 
@@ -47,17 +43,14 @@ void PlayScene::update()
 { 
 	
 	for(auto enemy : m_pEnemy)
-	{
 		enemy->getDecisionTree()->MakeDecision();
-	}
+	
 	for(auto enemy: m_pEnemy)
 	{
 		if (enemy->getHealth() == 1)
-		{
 			enemy->setHealthState(true);
-		}
 	}
-	//std::cout << m_pPlayerBullets.size() << std::endl;
+	
 	EnemyFireCoolDown--;
 	meleeCoolDown--;
 	m_setUIScore();
@@ -72,6 +65,7 @@ void PlayScene::update()
 				m_pEnemy[i]->attackCooldown--;
 		}
 	}
+	
 	for (int i = 0; i < m_pObstacle.size(); i++)
 	{
 		if (m_pObstacle[i]->getHealth() != -10)
@@ -89,9 +83,7 @@ void PlayScene::update()
 		}
 	}
 	for(int i = 0; i < m_pNode.size(); i++)
-	{
 		m_CheckNodeLOS(m_pNode[i]);
-	}
 
 	//m_DecisionMaking();
 	for (int i = 0; i < m_pEnemy.size(); i++)
@@ -147,28 +139,6 @@ void PlayScene::update()
 		m_meleeActtack->setDirection(m_pShip->getCurrentHeading() + 90);
 	}
 
-	
-	//for (int i = 0; i < m_pPlayerBullets.size(); i++)
-	//{
-	//	m_pPlayerBullets[i]->setRotation(m_pShip->getCurrentHeading());
-	//}
-
-
-	/*for (int i = 0; i < m_pEnemy.size(); i++)
-	{
-		if (CollisionManager::AABBCheck(m_pEnemy[i], m_pNode[currentMapNode]))
-		{
-			if (currentMapNode == 19)
-				currentMapNode = 0;
-			else
-			{
-				currentMapNode++;
-			}
-			m_pEnemy[i]->setTargetPosition(glm::vec2(m_pNode[currentMapNode]->getTransform()->position.x - (m_pNode[currentMapNode]->getWidth() / 2),
-				m_pNode[currentMapNode]->getTransform()->position.y - (m_pNode[currentMapNode]->getHeight() / 2)));
-		}
-	}*/
-
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
 		if (m_pEnemy[i]->getHealth() == 0)
@@ -183,10 +153,8 @@ void PlayScene::update()
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
 		if (m_pEnemy[i]->getAnimationState() == ENEMY_DEATH)
-		{
-			std::cout << "Death Animation\n";
 			m_pEnemy[i]->deathCooldown--;
-		}
+
 		if(m_pEnemy[i]->deathCooldown <= 0)
 		{
 			m_enemysKilled++;
@@ -197,9 +165,8 @@ void PlayScene::update()
 			m_pEnemy.erase(m_pEnemy.begin() + i);
 			m_pEnemy.shrink_to_fit();
 			if (m_pEnemy.empty())
-			{
 				TheGame::Instance()->changeSceneState(END_SCENE);
-			}
+
 			break;
 		}
 	}
@@ -208,9 +175,7 @@ void PlayScene::update()
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
 		if (m_pEnemy[i]->getAnimationState() == ENEMY_DAMAGE && m_pEnemy[i]->getAgentType() != CLOSE_COMBAT_ENEMY)
-		{
 			damageCooldown--;
-		}
 
 		if(damageCooldown <= 0 && m_pEnemy[i]->getAgentType() != CLOSE_COMBAT_ENEMY)
 		{
@@ -222,10 +187,7 @@ void PlayScene::update()
 	for (int i = 0; i < m_pEnemy.size(); i++)
 	{
 		if (m_pEnemy[i]->getAnimationState() == ENEMY_DAMAGE && m_pEnemy[i]->getAgentType() != RANGED_ENEMY)
-		{
-			std::cout << "Reducing dmg cooldown\n\n\n\n\n";
 			meleeDamageCooldown--;
-		}
 
 		if (meleeDamageCooldown <= 0 && m_pEnemy[i]->getAgentType() != RANGED_ENEMY)
 		{
@@ -235,10 +197,7 @@ void PlayScene::update()
 	}
 
 	if (m_pShip->getAnimationState() == PLAYER_IDLE && m_pShip->getMoving() == true)
-	{
-		
 		m_pShip->setAnimationState(PLAYER_RUN);
-	}
 }
 
 void PlayScene::clean()
@@ -252,19 +211,13 @@ void PlayScene::handleEvents()
 	EventManager::Instance().update();
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_ESCAPE))
-	{
 		TheGame::Instance()->quit();
-	}
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_1))
-	{
 		TheGame::Instance()->changeSceneState(START_SCENE);
-	}
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_2))
-	{
 		TheGame::Instance()->changeSceneState(LOSE_SCENE);
-	}
 
 	if(EventManager::Instance().isKeyDown(SDL_SCANCODE_H))
 	{
@@ -273,15 +226,13 @@ void PlayScene::handleEvents()
 			m_pShip->setDebug(!m_pShip->getDebugState());
 			for (auto node : m_pNode)
 				node->setDebug(!node->getDebugState());
+			
 			for (int i = 0; i < m_pEnemy.size(); i++)
-			{
 				m_pEnemy[i]->setDebug(!m_pEnemy[i]->getDebugState());
-			}
 
 			for (auto obstacle : m_pObstacle)
-			{
 				obstacle->setDebug(!obstacle->getDebug());
-			}
+			
 			cooldown = 20;
 		}
 	}
@@ -294,7 +245,6 @@ void PlayScene::handleEvents()
 			{
 				if (m_pShip->getHealth() != 3)
 					m_pShip->setHealth(m_pShip->getHealth() + 1);
-				std::cout << m_pShip->getHealth() << std::endl;
 				cooldown = 20;
 			}
 		}
@@ -308,7 +258,6 @@ void PlayScene::handleEvents()
 			{
 				if (m_pEnemy[i]->getHealth() != 0)
 					m_pEnemy[i]->setHealth(m_pEnemy[i]->getHealth() - 1);
-				std::cout << m_pEnemy[i]->getHealth() << std::endl;
 				m_pEnemy[i]->setAnimationState(ENEMY_DAMAGE);
 			}
 			cooldown = 20;
@@ -322,7 +271,6 @@ void PlayScene::handleEvents()
 			if(m_pShip != nullptr)
 			{
 				m_pShip->setHealth(m_pShip->getHealth() - 1);
-				std::cout << m_pShip->getHealth() << std::endl;
 				cooldown = 20;
 			}
 		}
@@ -335,13 +283,8 @@ void PlayScene::handleEvents()
 			m_setPatrolMode(!m_getPatrolMode());
 			if (m_getPatrolMode())
 			{
-
 				for (int i = 0; i < m_pEnemy.size(); i++)
-				{
-
 					m_pEnemy[i]->setAnimationState(ENEMY_RUN);
-				}
-
 			}
 			else
 			{
@@ -375,9 +318,8 @@ void PlayScene::handleEvents()
 			m_pShip->setCurrentDirection(glm::vec2(m_pShip->getCurrentDirection().x, 1.0f));
 		}
 		else
-		{
 			m_pShip->setYMoving(false);
-		}
+		
 		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
 		{
 			m_pShip->setXMoving(true);
@@ -420,9 +362,8 @@ void PlayScene::handleEvents()
 		m_pShip->setAnimationState(PLAYER_IDLE);
 	}
 	if(cooldown <= 0 && m_pShip->getMoving() == false && m_pShip->getAnimationState() != PLAYER_MELEE)
-	{
 		m_pShip->setAnimationState(PLAYER_IDLE);
-	}
+
 	if (EventManager::Instance().getMouseButton(2))
 	{
 		if (cooldown <= -20)
@@ -448,10 +389,6 @@ void PlayScene::start()
 	m_UIScore->setParent(this);
 	addChild(m_UIScore);
 
-
-
-
-
 	instructions = new Label("--", "Consolas", 20, colour, glm::vec2(550.0f, 585.0f));
 	instructions->setParent(this);
 	addChild(instructions);
@@ -462,23 +399,11 @@ void PlayScene::start()
 	const std::string Score_string = stream.str();
 	instructions->setText(Score_string);
 
-
-	// add the ship to the scene as a start point
-	//m_pShip = new Ship();
-	//m_pShip->getTransform()->position = glm::vec2(50.0f, 550.0f);
-	//addChild(m_pShip);
-
-
-	// add the Obstacle to the scene as a start point
 	m_pObstacle.push_back( new Obstacle(79.0f, 79.0f,"../Assets/textures/Obstacle_1.png", "Obstacle_1")); //top left obstacle
 
-	// add the Obstacle to the scene as a start point
 	m_pObstacle.push_back(new Obstacle(134, 47, 0, 441));
 
-
-	// add the Obstacle to the scene as a start point
 	m_pObstacle.push_back( new Obstacle(61, 160, 229, 440));
-
 
 	m_pObstacle.push_back(new Obstacle(536, 292, "../Assets/textures/Obstacle_3.png", "Obstacle_3"));
 
@@ -486,12 +411,8 @@ void PlayScene::start()
 	m_pObstacle.push_back(new Obstacle(503, 52, "../Assets/textures/Obstacle_2.png", "Obstacle_2"));
 
 	for (auto obstacle : m_pObstacle)
-	{
 		addChild(obstacle);
-	}
 	
-	// added the target to the scene a goal
-
 	m_pNode.push_back(new Node(40, 20)); //Top Nodes
 	m_pNode.push_back(new Node(110, 20));
 	m_pNode.push_back(new Node(170, 20));
@@ -616,9 +537,7 @@ void PlayScene::start()
 	m_pNode.push_back(new Node(143, 574));
 
 	for(int i = 0; i < m_pNode.size(); i++)
-	{
 		m_pNode[i]->m_label->setText(std::to_string(i));
-	}
 
 	for (auto node : m_pNode)
 		addChild(node);
@@ -674,21 +593,16 @@ void PlayScene::CollisionsUpdate()
 		{
 			//std::cout << m_pShip->getTransform()->position.x - m_playerSpeed << std::endl;
 			if (int(m_pShip->getTransform()->position.x + m_pShip->getWidth() - m_pShip->getRigidBody()->velocity.x) <= (obj->getTransform()->position.x))
-			{
 				m_pShip->getTransform()->position.x -= m_playerSpeed * 2;
-			}
+
 			else if (int(m_pShip->getTransform()->position.x - m_pShip->getRigidBody()->velocity.x) >= (obj->getTransform()->position.x + obj->getWidth()))
-			{
 				m_pShip->getTransform()->position.x += m_playerSpeed * 2;
-			}
+
 			else if ((m_pShip->getTransform()->position.y + m_pShip->getHeight() - m_playerSpeed) <= (obj->getTransform()->position.y))
-			{
 				m_pShip->getTransform()->position.y -= m_playerSpeed * 2;
-			}
+
 			else if ((m_pShip->getTransform()->position.y + m_playerSpeed) >= (obj->getTransform()->position.y + obj->getHeight()))
-			{
 				m_pShip->getTransform()->position.y += m_playerSpeed * 2;
-			}
 		}
 	}
 
@@ -700,21 +614,16 @@ void PlayScene::CollisionsUpdate()
 			{
 				//std::cout << m_pShip->getTransform()->position.x - m_playerSpeed << std::endl;
 				if (int(m_pEnemy[i]->getTransform()->position.x + m_pEnemy[i]->getWidth() - m_pEnemy[i]->getRigidBody()->velocity.x) <= (obj->getTransform()->position.x))
-				{
 					m_pEnemy[i]->getTransform()->position.x -= m_playerSpeed * 2;
-				}
+
 				else if (int(m_pEnemy[i]->getTransform()->position.x - m_pEnemy[i]->getRigidBody()->velocity.x) >= (obj->getTransform()->position.x + obj->getWidth()))
-				{
 					m_pEnemy[i]->getTransform()->position.x += m_playerSpeed * 2;
-				}
+
 				else if ((m_pEnemy[i]->getTransform()->position.y + m_pEnemy[i]->getHeight() - m_playerSpeed) <= (obj->getTransform()->position.y))
-				{
 					m_pEnemy[i]->getTransform()->position.y -= m_playerSpeed * 2;
-				}
+
 				else if ((m_pEnemy[i]->getTransform()->position.y + m_playerSpeed) >= (obj->getTransform()->position.y + obj->getHeight()))
-				{
 					m_pEnemy[i]->getTransform()->position.y += m_playerSpeed * 2;
-				}
 			}
 		}
 		
@@ -786,10 +695,8 @@ void PlayScene::CollisionsUpdate()
 				if(CollisionManager::AABBCheck(m_pPlayerBullets[i], obstacle))
 				{
 					if (obstacle->getHealth() != -10)
-					{
 						obstacle->setHealth(obstacle->getHealth() - 1);
-						//std::cout << obstacle->getHealth() << std::endl;
-					}
+					
 					removeChild(m_pPlayerBullets[i]);
 					m_pPlayerBullets[i] = nullptr;
 					m_pPlayerBullets.erase(m_pPlayerBullets.begin() + i);
@@ -799,18 +706,6 @@ void PlayScene::CollisionsUpdate()
 			}
 		}
 	}
-	/*if (m_meleeActtack->isEnabled())
-	{
-		for (int i = 0; i < m_pEnemy.size(); i++)
-		{
-			if (CollisionManager::AABBCheck(m_meleeActtack, m_pEnemy[i]))
-			{
-				m_pEnemy[i]->setAnimationState(ENEMY_DAMAGE);
-				SoundManager::Instance().playSound("Melee", 0, -1);
-				m_pEnemy[i]->setHealth(m_pEnemy[i]->getHealth() - 1);
-			}
-		}
-	}*/
 
 	for (int i = 0; i < m_pEnemyBullets.size(); i++)
 	{
@@ -855,8 +750,7 @@ void PlayScene::CollisionsUpdate()
 				if (CollisionManager::AABBCheck(m_pEnemyBullets[i],m_pShip))
 				{
 					if(m_pShip != nullptr)
-						m_pShip->setHealth(m_pShip->getHealth() - 1);
-					
+						m_pShip->setHealth(m_pShip->getHealth() - 1);					
 				}
 			}
 			for (auto obstacle : m_pObstacle)
@@ -947,19 +841,6 @@ void PlayScene::m_RespawnEnemy(int numb)
 	}
 }
 
-
-//if (CollisionManager::AABBCheck(m_pEnemy[i], m_pNode[currentMapNode]))
-//{
-//	if (currentMapNode == 19)
-//		currentMapNode = 0;
-//	else
-//	{
-//		currentMapNode++;
-//	}
-//	m_pEnemy[i]->setTargetPosition(glm::vec2(m_pNode[currentMapNode]->getTransform()->position.x - (m_pNode[currentMapNode]->getWidth() / 2),
-//		m_pNode[currentMapNode]->getTransform()->position.y - (m_pNode[currentMapNode]->getHeight() / 2)));
-//}
-
 void PlayScene::m_DecisionMaking(Enemy* m_agent)
 {
 	if (m_agent == nullptr)
@@ -1009,9 +890,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 				if (m_CheckNodeEnemyLOS(node, m_agent))
 				{
 					if (node->getHasLOS())
-					{
 						m_agent->setTargetPosition(node->getTransform()->position);
-					}
 				}
 			}
 
@@ -1111,9 +990,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 				if (m_CheckNodeEnemyLOS(node, m_agent))
 				{
 					if (node->getHasLOS())
-					{
 						m_agent->setTargetPosition(node->getTransform()->position);
-					}
 				}
 			}
 		}
@@ -1130,7 +1007,6 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			m_agent->getDecisionTree()->getCurrentAction()->Action(m_agent);
 			m_agent->setAnimationState(ENEMY_MELEE);
 			m_agent->Attack();
-			//SDL_FRect* shipRect = new SDL_FRect{ m_pShip->getTransform()->position.x,  m_pShip->getTransform()->position.y, m_pShip->getWidth(), m_pShip->getHeight() };
 			if((CollisionManager::AABBCheck(m_agent, m_pShip) && m_agent->attackCooldown <= 0))
 			{
 				SoundManager::Instance().playSound("CCattack", 0, -1);
@@ -1167,14 +1043,10 @@ void PlayScene::GUI_Function()
 		for (auto node : m_pNode)
 			node->setDebug(!node->getDebugState());
 		for (int i = 0; i < m_pEnemy.size(); i++)
-		{
 			m_pEnemy[i]->setDebug(!m_pEnemy[i]->getDebugState());
-		}
 
 		for (auto obstacle : m_pObstacle)
-		{
 			obstacle->setDebug(!obstacle->getDebug());
-		}
 	}
 
 	ImGui::SameLine();
@@ -1229,9 +1101,7 @@ void PlayScene::m_CheckShipLOS(DisplayObject* target_object)
 		for (auto object : getDisplayList())
 		{
 			if (object->getType() == NODE || object->getType() == NONE || object->getType() == BULLET)
-			{
 				continue;
-			}
 			// check if object is farther than than the target
 			auto ShipToObjectDistance = Util::distance(m_pShip->getTransform()->position, object->getTransform()->position);
 			bool collidingObstacle = (CollisionManager::lineRectCheck(glm::vec2(m_pShip->getTransform()->position.x + getWidth() / 2, m_pShip->getTransform()->position.y + getHeight() / 2),
@@ -1241,9 +1111,7 @@ void PlayScene::m_CheckShipLOS(DisplayObject* target_object)
 			if (ShipToObjectDistance <= ShipToTargetDistance && collidingObstacle)
 			{
 				if ((object->getType() != m_pShip->getType()) && (object->getType() != target_object->getType()))
-				{
 					contactList.push_back(object);
-				}
 			}
 		}
 		contactList.push_back(target_object); // add the target to the end of the list
@@ -1253,33 +1121,6 @@ void PlayScene::m_CheckShipLOS(DisplayObject* target_object)
 		m_pShip->setHasLOS(hasLOS);
 	}
 }
-
-//void PlayScene::m_CheckShipDetection(DisplayObject* target_object)
-//{
-//	// if ship to target distance is less than or equal to detection Distance
-//	auto ShipToTargetDistance = Util::distance(m_pShip->getTransform()->position, target_object->getTransform()->position);
-//	if (ShipToTargetDistance <= m_pShip->getDetectionDistance())
-//	{
-//		std::vector<DisplayObject*> contactList;
-//		for (auto object : getDisplayList())
-//		{
-//			// check if object is farther than than the target
-//			auto ShipToObjectDistance = Util::distance(m_pShip->getTransform()->position, object->getTransform()->position);
-//
-//			if (ShipToObjectDistance <= ShipToTargetDistance)
-//			{
-//				if ((object->getType() != m_pShip->getType()) && (object->getType() != target_object->getType()))
-//				{
-//					contactList.push_back(object);
-//				}
-//			}
-//		}
-//		contactList.push_back(target_object); // add the target to the end of the list
-//		auto hasDetection = CollisionManager::detectionCheck(m_pShip->getTransform()->position, m_pShip->getDetectionDistance(), contactList, target_object);
-//
-//		m_pShip->setHasDetection(hasDetection);
-//	}
-//}
 
 void PlayScene::m_CheckEnemyDetection(Enemy* enemy)
 {
@@ -1296,68 +1137,11 @@ void PlayScene::m_CheckEnemyDetection(Enemy* enemy)
 		enemy->setHasDetected(true);
 	}
 	else
-	{
 		enemy->setHasDetection(false);
-	}
 }
 
 void PlayScene::m_CheckEnemyLOS(Enemy* enemy)
 {
-	//bool collidingObstacle;
-	//// if ship to target distance is less than or equal to LOS Distance
-	//auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
-	//if (ShipToTargetDistance <= enemy->getLOSDistance())
-	//{
-	//	std::vector<DisplayObject*> contactList;
-	//	for (auto object : getDisplayList())
-	//	{
-	//		if (object->getType() == NODE || object->getType() == NONE || object->getType() == BULLET)
-	//		{
-	//			continue;
-	//		}
-	//		collidingObstacle = (CollisionManager::lineRectCheck(glm::vec2(enemy->getTransform()->position.x + getWidth() / 2, enemy->getTransform()->position.y + getHeight() / 2),
-	//			(glm::vec2(enemy->getTransform()->position.x + getWidth() / 2, enemy->getTransform()->position.y + getHeight() / 2) + enemy->getCurrentDirection() * enemy->getLOSDistance()),
-	//			object->getTransform()->position, object->getWidth(), object->getHeight()));
-	//		// check if object is farther than than the target
-	//		auto ShipToObjectDistance = Util::distance(enemy->getTransform()->position, object->getTransform()->position);
-
-	//		if (ShipToObjectDistance <= ShipToTargetDistance && collidingObstacle)
-	//		{
-	//			if ((object->getType() != enemy->getType()) && (object->getType() != m_pShip->getType()))
-	//			{
-	//				contactList.push_back(object);
-	//			}
-	//		}
-	//	}
-	//	contactList.push_back(m_pShip); // add the target to the end of the list
-	//	auto hasLOS = CollisionManager::LOSCheck(enemy->getTransform()->position,
-	//		enemy->getTransform()->position + enemy->getCurrentDirection() * enemy->getLOSDistance(), contactList, m_pShip);
-	//	if (hasLOS)
-	//	{
-	//		for (auto obj : getDisplayList())
-	//		{
-	//			if (obj->getType() == NODE || obj->getType() == NONE || obj->getType() == BULLET)
-	//			{
-	//				continue;
-	//			}
-	//			if (CollisionManager::lineRectCheck(enemy->getTransform()->position, m_pShip->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
-	//			{
-	//				enemy->setHasLOS(hasLOS);
-	//				std::cout << "i see you";
-	//				return;
-	//			}
-	//			else
-	//			{
-	//				enemy->setHasLOS(false);
-	//			}
-	//		}
-	//	}
-	//	else
-	//	{
-	//		enemy->setHasLOS(hasLOS);
-	//	}
-
-	//}
 	for (auto obj : getDisplayList())
 	{
 		if (obj->getType() == OBSTACLE)
@@ -1399,22 +1183,18 @@ bool PlayScene::m_getPatrolMode() const
 void PlayScene::m_CheckEnemyHealth(Enemy* enemy)
 {
 	if(enemy->getHealth() == 1)
-	{
 		enemy->setHealthState(true);
-	}
+	
 	else
-	{
 		enemy->setHealthState(false);
-	}
 }
 
 void PlayScene::m_CheckCloseCombatRange(Enemy* enemy)
 {
 	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
 	if(ShipToTargetDistance <= 50)
-	{
 		enemy->setCloseCombat(true);
-	}
+	
 	else
 	{
 		enemy->setCloseCombat(false);
@@ -1452,9 +1232,7 @@ void PlayScene::m_CheckNodeLOS(Node* node)
 				return;
 			}
 			else
-			{
 				node->setHasLOS(true);
-			}
 		}
 	}
 }
@@ -1466,13 +1244,9 @@ bool PlayScene::m_CheckNodeEnemyLOS(Node* node, Agent* enemy)
 		if (obj->getType() == OBSTACLE)
 		{
 			if (CollisionManager::lineRectCheck(node->getTransform()->position, enemy->getTransform()->position, obj->getTransform()->position, obj->getWidth(), obj->getHeight()))
-			{
 				return false;
-			}
 			else
-			{
 				return true;
-			}
 		}
 	}
 	return false;
@@ -1484,32 +1258,20 @@ void PlayScene::m_CheckTooClose(Enemy* enemy)
 {
 	auto ShipToTargetDistance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position);
 	if (ShipToTargetDistance <= enemy->getMinFireDistance())
-	{
 		enemy->setInrange(true);
-	}
+	
 	else
-	{
 		enemy->setInrange(false);
-	}
 }
 
 void PlayScene::m_CheckBehindCover(Enemy* enemy)
 {
-	
-	//Get line between enemy and player
-	//Check if line intercepts an object
-	//If line intercepts object, true
-	//else, false
-
-	
-
 	auto Distance = Util::distance(enemy->getTransform()->position, m_pShip->getTransform()->position); //Distance from enemy to ship
 	for (auto object : getDisplayList())
 	{
 		if (object->getType() != OBSTACLE)
-		{
 			continue;
-		}
+		
 		auto DistanceToObject = Util::distance(enemy->getTransform()->position, object->getTransform()->position); //Distance from enemy to object
 		auto Collision = CollisionManager::lineRectCheck(enemy->getTransform()->position, m_pShip->getTransform()->position, object->getTransform()->position,
 			object->getWidth(), object->getHeight()); //if line between ship and enemy hit an obstacle
@@ -1519,9 +1281,7 @@ void PlayScene::m_CheckBehindCover(Enemy* enemy)
 			return;
 		}
 		else 
-		{
 			enemy->setBehindCoverState(false);
-		}
 	}
 }
 

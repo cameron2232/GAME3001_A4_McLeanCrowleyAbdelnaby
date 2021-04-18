@@ -150,10 +150,7 @@ void Agent::setHealthPostion(glm::vec2 postion)
 void Agent::drawHeath()
 {
 	if (m_agentHealth != nullptr)
-	{
 		m_agentHealth->draw();
-		//std::cout << std::endl << "yes" << std::endl;
-	}
 }
 
 void Agent::setFireDistance(int distance)

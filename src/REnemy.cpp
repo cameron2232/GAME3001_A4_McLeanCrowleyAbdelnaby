@@ -10,8 +10,6 @@ REnemy::REnemy()
 {
 	m_maxSpeed = 10.0f;
 	TextureManager::Instance()->loadSpriteSheet("../Assets/sprites/EnemyGuard.txt", "../Assets/sprites/EnemyGuard.png", "GuardSheet");
-
-    //auto size = TextureManager::Instance()->getTextureSize("ship");
 	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("GuardSheet"));
 	
 	setWidth(25);
@@ -29,10 +27,7 @@ REnemy::REnemy()
 	m_accelerationRate = 1.0f;
 	m_maxSpeed = 3.0f;
 	deathCooldown = 60;
-
-	//setFireDistance(getLOSDistance());
-	//setIsInFireDetection(false);
-	//setFireDetectionColour(glm::vec4(1, 0, 0, 1));
+	
 	setAgentType(RANGED_ENEMY);
 	
 	setLOSDistance(400.0f); // 5 ppf x 80 feet
@@ -108,8 +103,6 @@ void REnemy::draw()
 
 void REnemy::update()
 {
-	//move();
-	//m_checkBounds();
 	glm::vec2 m_targetDistance = glm::vec2(abs(getTransform()->position.x - getTargetPosition().x), abs( getTransform()->position.y - getTargetPosition().y));
 	float magnitudeDistance = sqrt((m_targetDistance.x * m_targetDistance.x) + (m_targetDistance.y * m_targetDistance.y));
 	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));

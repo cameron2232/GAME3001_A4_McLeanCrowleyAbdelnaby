@@ -2,10 +2,7 @@
 #include <iostream>
 
 
-DecisionTree::DecisionTree()
-{
-	//m_buildTree();
-}
+DecisionTree::DecisionTree() {}
 
 DecisionTree::~DecisionTree() = default;
 
@@ -97,16 +94,11 @@ std::string DecisionTree::MakeDecision()
 	Update();
 
 	auto currentNode = m_treeNodeList[0];
-
-	//m_HealthNode->setHealthCondition(false);
 	
 	while (!currentNode->isLeaf)
-	{
 		currentNode = (currentNode->data) ? (currentNode->Right) : (currentNode->Left);
-	}
 	
 	setCurrentNode(currentNode);
-	//std::cout << currentNode->name << std::endl;
 	return currentNode->name;
 
 	
@@ -130,7 +122,7 @@ void DecisionTree::m_buildTree()
 
 		m_RadiusNode = new RadiusCondition();
 		AddNode(m_RecentlyHitNode, m_RadiusNode, LEFT_TREE_NODE); //RECENTLY HIT LEFT
-		m_treeNodeList.push_back(m_RadiusNode); //Node 7, if no LOS, check if in detection Radius
+		m_treeNodeList.push_back(m_RadiusNode); //Node 3, if no LOS, check if in detection Radius
 
 		m_BehindCoverNode = new BehindCoverCondition();
 		AddNode(m_RecentlyHitNode, m_BehindCoverNode, RIGHT_TREE_NODE); //RECENTLY HIT RIGHT
@@ -143,18 +135,18 @@ void DecisionTree::m_buildTree()
 		m_treeNodeList.push_back(waitBehindCoverNode); //Node 6, if Behind Cover, Wait specified time
 
 		TreeNode* patrolNode = AddNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE); //RADIUS LEFT
-		m_treeNodeList.push_back(patrolNode); //Node 9, if no DR, Patrol Action
+		m_treeNodeList.push_back(patrolNode); //Node 7, if no DR, Patrol Action
 
 		m_LOSNode = new LOSCondition();
 		AddNode(m_RadiusNode, m_LOSNode, RIGHT_TREE_NODE); //RADIUS RIGHT
-		m_treeNodeList.push_back(m_LOSNode);
+		m_treeNodeList.push_back(m_LOSNode); //Node 8
 
 		TreeNode* moveToLOSNode = AddNode(m_LOSNode, new MoveToLOSAction, LEFT_TREE_NODE); //LOS LEFT
-		m_treeNodeList.push_back(moveToLOSNode); //Node 10, if has DR, Move to LOS
+		m_treeNodeList.push_back(moveToLOSNode); //Node 9, if has DR, Move to LOS
 
 		m_AttackRangeNode = new AttackRangeCondition(); 
 		AddNode(m_LOSNode, m_AttackRangeNode, RIGHT_TREE_NODE); //LOS RIGHT
-		m_treeNodeList.push_back(m_AttackRangeNode); //Node 8, if LOS, check if in Attack Range
+		m_treeNodeList.push_back(m_AttackRangeNode); //Node 10, if LOS, check if in Attack Range
 
 		TreeNode* moveToPlayerNode = AddNode(m_AttackRangeNode, new MoveToPlayerAction, LEFT_TREE_NODE); //ATTACK RANGE LEFT
 		m_treeNodeList.push_back(moveToPlayerNode); //Node 11, if not in Attack Range, Move to Player
@@ -177,33 +169,33 @@ void DecisionTree::m_buildTree()
 
 		m_RadiusNode = new RadiusCondition();
 		AddNode(m_HealthNode, m_RadiusNode, LEFT_TREE_NODE); //HEALTH LEFT
-		m_treeNodeList.push_back(m_RadiusNode);//Node 4, Check Radius
+		m_treeNodeList.push_back(m_RadiusNode);//Node 1, Check Radius
 
 		TreeNode* fleeCNode = AddNode(m_HealthNode, new FleeAction, RIGHT_TREE_NODE); //HEALTH RIGHT
-		m_treeNodeList.push_back(fleeCNode); //Node 3, if Health < 25%, Flee
+		m_treeNodeList.push_back(fleeCNode); //Node 2, if Health < 25%, Flee
 
 		TreeNode* patrolCNode = AddNode(m_RadiusNode, new PatrolAction(), LEFT_TREE_NODE); //RADIUS LEFT
-		m_treeNodeList.push_back(patrolCNode); //Node 6, if no DR, Patrol Action
+		m_treeNodeList.push_back(patrolCNode); //Node 3, if no DR, Patrol Action
 
 		m_LOSNode = new LOSCondition();
 		AddNode(m_RadiusNode, m_LOSNode, RIGHT_TREE_NODE); //RADIUS RIGHT
-		m_treeNodeList.push_back(m_LOSNode); //Node 2, if Health > 25%, check LOS
+		m_treeNodeList.push_back(m_LOSNode); //Node 4, if Health > 25%, check LOS
 
 		TreeNode* moveToLOSCNode = AddNode(m_LOSNode, new MoveToLOSAction, LEFT_TREE_NODE); //LOS RIGHT
-		m_treeNodeList.push_back(moveToLOSCNode); //Node 7, if has DR, Move to LOS
+		m_treeNodeList.push_back(moveToLOSCNode); //Node 5, if has DR, Move to LOS
 
 		m_CloseCombatNode = new CloseCombatCondition();
 		AddNode(m_LOSNode, m_CloseCombatNode, RIGHT_TREE_NODE); //LOS RIGHT
-		m_treeNodeList.push_back(m_CloseCombatNode); //Node 5, if LOS, check if in CC Range
+		m_treeNodeList.push_back(m_CloseCombatNode); //Node 6, if LOS, check if in CC Range
 
 		TreeNode* moveToPlayerCNode = AddNode(m_CloseCombatNode, new MoveToPlayerAction, LEFT_TREE_NODE); //CLOSE COMBAT RANGE LEFT
-		m_treeNodeList.push_back(moveToPlayerCNode); //Node 8, if not in Attack Range, Move to Player
+		m_treeNodeList.push_back(moveToPlayerCNode); //Node 7, if not in Attack Range, Move to Player
 
 		TreeNode* closeCombatAttack = AddNode(m_CloseCombatNode, new CloseCombatAction, RIGHT_TREE_NODE); //CLOSE COMBAT RANGE RIGHT
-		m_treeNodeList.push_back(closeCombatAttack);
+		m_treeNodeList.push_back(closeCombatAttack); //Node 8
 		break;
 	}
-	case AGENT_PLAYER: //Do Nothing Here, stays empty
+	case AGENT_PLAYER:
 		break;
 	}
 }

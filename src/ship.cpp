@@ -107,18 +107,14 @@ void Ship::turnRight()
 {
 	setCurrentHeading(getCurrentHeading() + m_turnRate );
 	if (getCurrentHeading() >= 360) 
-	{
 		setCurrentHeading(getCurrentHeading() - 360.0f);;
-	}
 }
 
 void Ship::turnLeft()
 {
 	setCurrentHeading(getCurrentHeading() - m_turnRate);
 	if (getCurrentHeading() < 0)
-	{
 		setCurrentHeading(getCurrentHeading() + 360.0f);
-	}
 }
 
 void Ship::moveForward()
@@ -179,9 +175,7 @@ void Ship::setSpriteSheet(SpriteSheet* sprite_sheet)
 void Ship::setAnimation(const Animation& animation)
 {
 	if (!m_animationsExists(animation.name))
-	{
 		m_pAnimations[animation.name] = animation;
-	}
 }
 
 bool Ship::m_animationsExists(const std::string& id)
@@ -246,24 +240,16 @@ void Ship::m_checkBounds()
 {
 
 	if (getTransform()->position.x + getWidth() > Config::SCREEN_WIDTH)
-	{
 		getTransform()->position = glm::vec2(800.0f - getWidth(), getTransform()->position.y);
-	}
 
 	if (getTransform()->position.x < 0)
-	{
 		getTransform()->position = glm::vec2(0.0f, getTransform()->position.y);
-	}
 
 	if (getTransform()->position.y + getHeight() > Config::SCREEN_HEIGHT)
-	{
 		getTransform()->position = glm::vec2(getTransform()->position.x, 600.0f - getHeight());
-	}
 
 	if (getTransform()->position.y < 0)
-	{
 		getTransform()->position = glm::vec2(getTransform()->position.x, 0.0f);
-	}
 }
 
 void Ship::m_reset()

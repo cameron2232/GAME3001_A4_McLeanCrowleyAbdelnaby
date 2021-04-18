@@ -19,18 +19,14 @@ void Enemy::turnRight()
 {
 	setCurrentHeading(getCurrentHeading() + m_turnRate);
 	if (getCurrentHeading() >= 360)
-	{
 		setCurrentHeading(getCurrentHeading() - 360.0f);;
-	}
 }
 
 void Enemy::turnLeft()
 {
 	setCurrentHeading(getCurrentHeading() - m_turnRate);
 	if (getCurrentHeading() < 0)
-	{
 		setCurrentHeading(getCurrentHeading() + 360.0f);
-	}
 }
 
 void Enemy::moveForward()
@@ -59,13 +55,10 @@ void Enemy::rotate()
 	if (abs(target_rotation) > turn_sensitivity)
 	{
 		if (target_rotation > 0.0f)
-		{
 			setCurrentHeading(getCurrentHeading() + m_turnRate);
-		}
+		
 		else if (target_rotation < 0.0f)
-		{
 			setCurrentHeading(getCurrentHeading() - m_turnRate);
-		}
 	}
 }
 
@@ -84,13 +77,10 @@ void Enemy::flee()
 	if (abs(target_rotation) > turn_sensitivity)
 	{
 		if (target_rotation > 0.0f)
-		{
 			setCurrentHeading(getCurrentHeading() + m_turnRate);
-		}
+		
 		else if (target_rotation < 0.0f)
-		{
 			setCurrentHeading(getCurrentHeading() - m_turnRate);
-		}
 	}
 
 
@@ -116,13 +106,10 @@ void Enemy::move()
 	if (abs(target_rotation) > turn_sensitivity)
 	{
 		if (target_rotation > 0.0f)
-		{
 			setCurrentHeading(getCurrentHeading() + m_turnRate);
-		}
+		
 		else if (target_rotation < 0.0f)
-		{
 			setCurrentHeading(getCurrentHeading() - m_turnRate);
-		}
 	}
 
 
@@ -228,31 +215,6 @@ DecisionTree* Enemy::getDecisionTree()
 	return decisionTree;
 }
 
-//void Enemy::m_checkBounds()
-//{
-//
-//	if (getTransform()->position.x + getWidth() > Config::SCREEN_WIDTH)
-//	{
-//		getTransform()->position = glm::vec2(800.0f - getWidth(), getTransform()->position.y);
-//	}
-//
-//	if (getTransform()->position.x < 0)
-//	{
-//		getTransform()->position = glm::vec2(0.0f, getTransform()->position.y);
-//	}
-//
-//	if (getTransform()->position.y + getHeight() > Config::SCREEN_HEIGHT)
-//	{
-//		getTransform()->position = glm::vec2(getTransform()->position.x, 600.0f - getHeight());
-//	}
-//
-//	if (getTransform()->position.y < 0)
-//	{
-//		getTransform()->position = glm::vec2(getTransform()->position.x, 0.0f);
-//	}
-//
-//}
-
 void Enemy::m_reset()
 {
 	getRigidBody()->isColliding = false;
@@ -271,57 +233,3 @@ void Enemy::Attack()
 {
 	
 }
-
-
-//void Enemy::draw()
-//{
-//	// alias for x and y
-//	const auto x = getTransform()->position.x;
-//	const auto y = getTransform()->position.y;
-//
-//	// draw the ship
-//	switch (m_currentAnimationState)
-//	{
-//	case ENEMY_IDLE:
-//		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("idle"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
-//		break;
-//
-//	case ENEMY_RUN:
-//		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("run"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
-//		break;
-//
-//	case ENEMY_DAMAGE:
-//		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("damage"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
-//		break;
-//
-//	case ENEMY_DEATH:
-//		TextureManager::Instance()->playAnimation("GuardSheet", getAnimation("death"), x, y, 0.10f, getCurrentHeading() + 80.0f, 255, false);
-//		break;
-//	}
-//
-//	// draw LOS
-//	if (getDebugState())
-//	{
-//		Util::DrawLine(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2),
-//			(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2)) + getCurrentDirection() * getLOSDistance(), getLOSColour());
-//
-//		// draw detection radius
-//		Util::DrawCircle(glm::vec2(getTransform()->position.x + getWidth() / 2, getTransform()->position.y + getHeight() / 2), getDetectionDistance(), getDetectionColor());
-//	}
-//
-//	drawHeath();
-//}
-//
-//
-//void Enemy::update()
-//{
-//	//move();
-//	m_checkBounds();
-//	glm::vec2 m_targetDistance = glm::vec2(abs(getTransform()->position.x - getTargetPosition().x), abs(getTransform()->position.y - getTargetPosition().y));
-//	float magnitudeDistance = sqrt((m_targetDistance.x * m_targetDistance.x) + (m_targetDistance.y * m_targetDistance.y));
-//	setHealthPostion(getTransform()->position - glm::vec2(40.0f, 25.0f));
-//}
-//
-//void Enemy::clean()
-//{
-//}
