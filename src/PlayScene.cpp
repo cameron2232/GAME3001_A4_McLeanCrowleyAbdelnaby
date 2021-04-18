@@ -236,6 +236,11 @@ void PlayScene::update()
 		
 		m_pShip->setAnimationState(PLAYER_RUN);
 	}
+
+	if (m_pShip->getHealth() == 0)
+	{
+		TheGame::Instance()->changeSceneState(LOSE_SCENE);
+	}
 }
 
 void PlayScene::clean()
@@ -642,6 +647,7 @@ void PlayScene::start()
 	SoundManager::Instance().load("../Assets/audio/ewalk.wav", "EWalk", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/hitsound.wav", "Hit", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/meleehit.wav", "Melee", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/ccenemyattack.wav", "CCattack", SOUND_SFX);
 
 	SoundManager::Instance().allocateChannels(16);
 
@@ -1119,6 +1125,7 @@ void PlayScene::m_DecisionMaking(Enemy* m_agent)
 			//SDL_FRect* shipRect = new SDL_FRect{ m_pShip->getTransform()->position.x,  m_pShip->getTransform()->position.y, m_pShip->getWidth(), m_pShip->getHeight() };
 			if((CollisionManager::AABBCheck(m_agent, m_pShip) && m_agent->attackCooldown <= 0))
 			{
+				SoundManager::Instance().playSound("CCattack", 0, -1);
 				m_agent->attackCooldown = 80;
 				m_pShip->setHealth(m_pShip->getHealth() - 1);
 			}

@@ -231,6 +231,9 @@
     <ClCompile Include="..\src\TooCloseCondition.cpp">
       <Filter>Decision\Conditions</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\LoseScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -478,6 +481,9 @@
     </ClInclude>
     <ClInclude Include="..\src\TooCloseCondition.h">
       <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LoseScene.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
