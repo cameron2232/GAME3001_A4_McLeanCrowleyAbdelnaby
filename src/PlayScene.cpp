@@ -71,7 +71,22 @@ void PlayScene::update()
 				m_pEnemy[i]->attackCooldown--;
 		}
 	}
-
+	for (int i = 0; i < m_pObstacle.size(); i++)
+	{
+		if (m_pObstacle[i]->getHealth() != -10)
+		{
+			if (m_pObstacle[i] != nullptr)
+			{
+				if (m_pObstacle[i]->getHealth() == 0)
+				{
+					removeChild(m_pObstacle[i]);
+					m_pObstacle[i] = nullptr;
+					m_pObstacle.erase(m_pObstacle.begin() + i);
+					m_pObstacle.shrink_to_fit();
+				}
+			}
+		}
+	}
 	for(int i = 0; i < m_pNode.size(); i++)
 	{
 		m_CheckNodeLOS(m_pNode[i]);
@@ -441,22 +456,25 @@ void PlayScene::start()
 
 
 	// add the Obstacle to the scene as a start point
-	m_pObstacle[0] = new Obstacle(268, 241, 79.0f, 79.0f); //top left obstacle
-	addChild(m_pObstacle[0]);
+	m_pObstacle.push_back( new Obstacle(79.0f, 79.0f,"../Assets/textures/Obstacle_1.png", "Obstacle_1")); //top left obstacle
 
 	// add the Obstacle to the scene as a start point
-	m_pObstacle[1] = new Obstacle(134, 47, 0, 441);
-	addChild(m_pObstacle[1]);
+	m_pObstacle.push_back(new Obstacle(134, 47, 0, 441));
+
 
 	// add the Obstacle to the scene as a start point
-	m_pObstacle[2] = new Obstacle(61, 160, 229, 440);
-	addChild(m_pObstacle[2]);
+	m_pObstacle.push_back( new Obstacle(61, 160, 229, 440));
 
-	m_pObstacle[3] = new Obstacle(192, 178, 536, 292);
-	addChild(m_pObstacle[3]);
 
-	m_pObstacle[4] = new Obstacle(249, 59, 503, 52);
-	addChild(m_pObstacle[4]);
+	m_pObstacle.push_back(new Obstacle(536, 292, "../Assets/textures/Obstacle_3.png", "Obstacle_3"));
+
+
+	m_pObstacle.push_back(new Obstacle(503, 52, "../Assets/textures/Obstacle_2.png", "Obstacle_2"));
+
+	for (auto obstacle : m_pObstacle)
+	{
+		addChild(obstacle);
+	}
 	
 	// added the target to the scene a goal
 
@@ -747,6 +765,11 @@ void PlayScene::CollisionsUpdate()
 			{
 				if(CollisionManager::AABBCheck(m_pPlayerBullets[i], obstacle))
 				{
+					if (obstacle->getHealth() != -10)
+					{
+						obstacle->setHealth(obstacle->getHealth() - 1);
+						//std::cout << obstacle->getHealth() << std::endl;
+					}
 					removeChild(m_pPlayerBullets[i]);
 					m_pPlayerBullets[i] = nullptr;
 					m_pPlayerBullets.erase(m_pPlayerBullets.begin() + i);

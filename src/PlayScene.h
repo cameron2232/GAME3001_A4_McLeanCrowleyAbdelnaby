@@ -44,7 +44,7 @@ private:
 	void m_setUIScore();
 	Target* m_pTarget;
 	Ship* m_pShip;
-	Obstacle* m_pObstacle[5];
+	std::vector<Obstacle*> m_pObstacle;
 	std::vector<Enemy*> m_pEnemy;
 	std::vector<Node*> m_pNode;
 	void m_CheckShipLOS(DisplayObject* object);
